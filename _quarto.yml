@@ -16,7 +16,9 @@ website:
       - href: en.qmd
         text: "🇬🇧 EN"
       - href: about.qmd
-        text: Hakkımızda / About
+        text: Hakkımızda
+      - href: about-en.qmd
+        text: About
     right:
       - icon: globe
         href: https://medyanistdanismanlik.com

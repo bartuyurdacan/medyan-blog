@@ -1,0 +1,49 @@
+---
+title: "About Us"
+image: profile.jpg
+about:
+  template: jolla
+  links:
+    - icon: globe
+      text: Our Website
+      href: https://medyanistdanismanlik.com
+    - icon: github
+      text: GitHub
+      href: https://github.com/bartuyurdacan
+    - icon: linkedin
+      text: LinkedIn
+      href: https://www.linkedin.com/in/fikret-bartu-yurdacan/
+    - icon: mortarboard-fill
+      text: ORCID
+      href: https://orcid.org/0000-0001-8168-7497
+    - icon: whatsapp
+      text: WhatsApp
+      href: https://wa.me/905394893522
+    - icon: instagram
+      text: Instagram
+      href: https://www.instagram.com/medyanistatistikdanismanlik/
+    - icon: envelope
+      text: Email
+      href: mailto:info@medyanistdanismanlik.com
+lang: en
+---
+
+## Medyan Statistics Consulting
+
+We are a professional firm offering **data analysis** and **statistical consulting** services across a wide range of fields, from academic research to corporate projects.
+
+We have successfully completed over 500 projects using **R, SPSS, Python, and Power BI**.
+
+### Our Expertise
+
+- Statistical analysis (parametric, non-parametric, regression, survival, mixed models)
+- Data visualization (ggplot2, Power BI dashboards)
+- Academic thesis and manuscript consulting
+- Machine learning and predictive modeling
+- Survey design and data collection
+- Statistical training (individual and corporate)
+
+### Contact
+
+📧 info@medyanistdanismanlik.com
+📱 +90 539 489 35 22

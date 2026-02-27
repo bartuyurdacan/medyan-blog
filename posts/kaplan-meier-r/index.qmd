@@ -2,7 +2,7 @@
 title: "R ile Kaplan-Meier Sağkalım Analizi: Adım Adım Rehber"
 author: "Medyan İstatistik"
 date: "2026-02-28"
-categories: [R, Survival Analysis, Tıp]
+categories: [R, Survival Analysis, Medicine]
 image: "kaplan_meier.png"
 description: "Klinik çalışmalarda sıkça kullanılan Kaplan-Meier sağkalım analizini R'da nasıl yapacağınızı öğrenin. survival ve survminer paketleri ile adım adım uygulama."
 lang: tr

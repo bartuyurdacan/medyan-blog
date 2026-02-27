@@ -2,7 +2,7 @@
 title: "ggplot2 ile APA Formatında Akademik Grafikler"
 author: "Medyan İstatistik"
 date: "2026-02-25"
-categories: [R, ggplot2, Görselleştirme]
+categories: [R, ggplot2, Visualization]
 image: "apa_grafik.png"
 description: "Akademik makaleler için APA standardına uygun grafikler nasıl oluşturulur? ggplot2 ile bar chart, box plot ve scatter plot örnekleri."
 lang: tr
