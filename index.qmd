@@ -8,6 +8,11 @@ listing:
   sort-ui: true
   filter-ui: true
   fields: [image, date, title, description, categories]
+  feed:
+    title: "Medyan İstatistik Blog"
+    description: "R, SPSS ve Python ile istatistik analiz rehberleri"
+    language: tr
+    type: full
 page-layout: full
 title-block-banner: true
 lang: tr

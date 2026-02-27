@@ -5,7 +5,7 @@ project:
 website:
   title: "Medyan İstatistik Blog"
   description: "R, SPSS ve Python ile istatistik analiz rehberleri ve akademik ipuçları"
-  site-url: https://bartuyurdacan.github.io/medyan-blog
+  site-url: https://bartuyurdacan.github.io/blog
   navbar:
     background: "#0a1628"
     foreground: "#f1f5f9"
@@ -35,6 +35,8 @@ website:
       - icon: instagram
         href: https://www.instagram.com/medyanistatistikdanismanlik/
   page-footer:
+    left: |
+      Part of [R-bloggers](https://www.r-bloggers.com)
     center: |
       &copy; 2026 Medyan İstatistik Danışmanlık |
       [medyanistdanismanlik.com](https://medyanistdanismanlik.com) |

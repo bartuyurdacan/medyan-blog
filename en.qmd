@@ -8,6 +8,12 @@ listing:
   sort-ui: true
   filter-ui: true
   fields: [image, date, title, description, categories]
+  feed:
+    title: "Medyan Statistics Blog - R"
+    description: "R tutorials, statistical analysis guides, and data visualization tips for academic research"
+    language: en
+    categories: [R]
+    type: full
 page-layout: full
 title-block-banner: true
 lang: en
