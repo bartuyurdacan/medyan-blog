@@ -12,13 +12,22 @@ website:
     logo: logo.png
     left:
       - href: index.qmd
-        text: Ana Sayfa
+        text: "🇹🇷 TR"
+      - href: en.qmd
+        text: "🇬🇧 EN"
       - href: about.qmd
-        text: Hakkımızda
+        text: Hakkımızda / About
     right:
       - icon: globe
         href: https://medyanistdanismanlik.com
-        text: Web Sitemiz
+        text: Web
+      - icon: github
+        href: https://github.com/bartuyurdacan
+      - icon: linkedin
+        href: https://www.linkedin.com/in/fikret-bartu-yurdacan/
+      - icon: mortarboard-fill
+        href: https://orcid.org/0000-0001-8168-7497
+        text: ORCID
       - icon: whatsapp
         href: https://wa.me/905394893522
       - icon: instagram
@@ -26,7 +35,10 @@ website:
   page-footer:
     center: |
       &copy; 2026 Medyan İstatistik Danışmanlık |
-      [medyanistdanismanlik.com](https://medyanistdanismanlik.com)
+      [medyanistdanismanlik.com](https://medyanistdanismanlik.com) |
+      [GitHub](https://github.com/bartuyurdacan) |
+      [ORCID](https://orcid.org/0000-0001-8168-7497) |
+      [LinkedIn](https://www.linkedin.com/in/fikret-bartu-yurdacan/)
     background: "#0a1628"
 
 format:

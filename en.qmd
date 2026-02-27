@@ -1,7 +1,7 @@
 ---
-title: "Medyan İstatistik Blog"
+title: "Medyan Statistics Blog"
 listing:
-  contents: posts
+  contents: posts-en
   sort: "date desc"
   type: default
   categories: true
@@ -10,7 +10,7 @@ listing:
   fields: [image, date, title, description, categories]
 page-layout: full
 title-block-banner: true
-lang: tr
+lang: en
 ---
 
-R, SPSS ve Python ile akademik araştırma, veri analizi ve görselleştirme üzerine rehberler ve ipuçları.
+Guides and tips on academic research, data analysis, and visualization with R, SPSS, and Python.

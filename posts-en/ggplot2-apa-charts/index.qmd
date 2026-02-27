@@ -1,0 +1,141 @@
+---
+title: "Academic Charts in APA Format with ggplot2"
+author: "Medyan Statistics"
+date: "2026-02-25"
+categories: [R, ggplot2, Visualization]
+image: "apa_grafik.png"
+description: "How to create APA-compliant charts for academic papers? Bar chart, box plot, and scatter plot examples with ggplot2."
+lang: en
+---
+
+## Introduction
+
+In academic papers, charts are critical for effective presentation of findings. The **APA (American Psychological Association)** format is the standard in many social science and health science journals.
+
+In this post, we will create APA-compliant charts using ggplot2.
+
+## APA Chart Guidelines
+
+- **Background**: White (minimal grid lines)
+- **Font**: Sans-serif (Arial, Helvetica)
+- **Color**: Must be readable in black-and-white print
+- **Axis labels**: Clear and descriptive
+- **Title**: With figure number (Figure 1, Figure 2...)
+
+## Base APA Theme
+
+```{r}
+#| message: false
+library(ggplot2)
+library(dplyr)
+
+# APA theme
+theme_apa <- function(base_size = 12) {
+  theme_classic(base_size = base_size) %+replace%
+    theme(
+      text = element_text(family = "sans"),
+      plot.title = element_text(face = "bold", size = base_size + 2,
+                                hjust = 0, margin = margin(b = 10)),
+      axis.title = element_text(face = "bold"),
+      axis.text = element_text(color = "black"),
+      legend.position = "bottom",
+      legend.title = element_text(face = "bold"),
+      panel.grid = element_blank(),
+      strip.background = element_blank(),
+      strip.text = element_text(face = "bold")
+    )
+}
+```
+
+## Example 1: Group Comparison (Bar Chart)
+
+```{r}
+#| fig-width: 8
+#| fig-height: 5
+#| fig-cap: "Figure 1. Mean score comparison by treatment group. Error bars represent ±1 standard error."
+
+set.seed(42)
+df_bar <- data.frame(
+  group = rep(c("Control", "Treatment A", "Treatment B"), each = 30),
+  score = c(rnorm(30, 50, 10), rnorm(30, 62, 12), rnorm(30, 58, 11))
+)
+
+summary_df <- df_bar |>
+  group_by(group) |>
+  summarise(
+    mean_score = mean(score),
+    se = sd(score) / sqrt(n()),
+    .groups = "drop"
+  )
+
+ggplot(summary_df, aes(x = group, y = mean_score, fill = group)) +
+  geom_col(width = 0.6, color = "black", linewidth = 0.3) +
+  geom_errorbar(aes(ymin = mean_score - se, ymax = mean_score + se),
+                width = 0.15, linewidth = 0.5) +
+  scale_fill_manual(values = c("gray80", "gray50", "gray30")) +
+  labs(x = "Treatment Group", y = "Mean Score (±SE)") +
+  theme_apa() +
+  theme(legend.position = "none") +
+  coord_cartesian(ylim = c(0, 80))
+```
+
+## Example 2: Box Plot
+
+```{r}
+#| fig-width: 8
+#| fig-height: 5
+#| fig-cap: "Figure 2. Score distributions by treatment group."
+
+ggplot(df_bar, aes(x = group, y = score, fill = group)) +
+  geom_boxplot(outlier.shape = 21, width = 0.5, color = "black") +
+  geom_jitter(width = 0.1, alpha = 0.3, size = 1.5) +
+  scale_fill_manual(values = c("gray90", "gray65", "gray40")) +
+  labs(x = "Treatment Group", y = "Score") +
+  theme_apa() +
+  theme(legend.position = "none")
+```
+
+## Example 3: Scatter Plot + Regression
+
+```{r}
+#| fig-width: 8
+#| fig-height: 5
+#| fig-cap: "Figure 3. Relationship between study hours and exam score."
+
+set.seed(42)
+df_scatter <- data.frame(
+  study_hours = runif(80, 1, 10),
+  exam_score = NA
+)
+df_scatter$exam_score <- 35 + 5.5 * df_scatter$study_hours + rnorm(80, 0, 8)
+
+model <- lm(exam_score ~ study_hours, data = df_scatter)
+r2 <- summary(model)$r.squared
+
+ggplot(df_scatter, aes(x = study_hours, y = exam_score)) +
+  geom_point(shape = 21, fill = "gray60", size = 2.5, stroke = 0.5) +
+  geom_smooth(method = "lm", color = "black", fill = "gray85", linewidth = 0.8) +
+  annotate("text", x = 2, y = 90,
+           label = paste0("R² = ", round(r2, 3)),
+           fontface = "italic", size = 4.5) +
+  labs(x = "Daily Study Hours", y = "Exam Score") +
+  theme_apa()
+```
+
+## Saving Charts
+
+```{r}
+#| eval: false
+# High-resolution saving (for journals)
+ggsave("figure1.png", width = 8, height = 5, dpi = 300, bg = "white")
+ggsave("figure1.tiff", width = 8, height = 5, dpi = 600, bg = "white")  # TIFF format
+ggsave("figure1.pdf", width = 8, height = 5)  # Vector format
+```
+
+## Conclusion
+
+Creating APA-formatted charts with ggplot2 is possible with just a few lines of theme configuration. By defining your own `theme_apa()` function, you can achieve a consistent style across all your figures.
+
+---
+
+*For academic charts and data visualization support, [contact us](https://medyanistdanismanlik.com).*

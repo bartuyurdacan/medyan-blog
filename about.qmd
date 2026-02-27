@@ -1,5 +1,5 @@
 ---
-title: "Hakkımızda"
+title: "Hakkımızda / About Us"
 image: profile.jpg
 about:
   template: jolla
@@ -7,6 +7,15 @@ about:
     - icon: globe
       text: Web Sitemiz
       href: https://medyanistdanismanlik.com
+    - icon: github
+      text: GitHub
+      href: https://github.com/bartuyurdacan
+    - icon: linkedin
+      text: LinkedIn
+      href: https://www.linkedin.com/in/fikret-bartu-yurdacan/
+    - icon: mortarboard-fill
+      text: ORCID
+      href: https://orcid.org/0000-0001-8168-7497
     - icon: whatsapp
       text: WhatsApp
       href: https://wa.me/905394893522
@@ -24,15 +33,24 @@ Akademik araştırmalardan kurumsal projelere kadar geniş bir yelpazede **veri 
 
 **R, SPSS, Python ve Power BI** ile 500'den fazla projeyi başarıyla tamamladık.
 
-### Uzmanlık Alanlarımız
+### Uzmanlık Alanlarımız / Our Expertise
 
 - İstatistiksel analiz (parametrik, non-parametrik, regresyon, survival, mixed models)
 - Veri görselleştirme (ggplot2, Power BI dashboards)
 - Akademik tez ve makale danışmanlığı
+- Makine öğrenmesi ve tahmine dayalı modelleme
 - Anket tasarımı ve veri toplama
 - İstatistik eğitimleri (bireysel ve kurumsal)
 
-### İletişim
+---
+
+## About Us
+
+We are a professional firm offering **data analysis** and **statistical consulting** services across a wide range of fields, from academic research to corporate projects.
+
+We have successfully completed over 500 projects using **R, SPSS, Python, and Power BI**.
+
+### Contact / İletişim
 
 📧 info@medyanistdanismanlik.com
 📱 +90 539 489 35 22
