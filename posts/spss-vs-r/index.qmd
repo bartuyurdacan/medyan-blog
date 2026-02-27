@@ -1,0 +1,102 @@
+---
+title: "SPSS vs R: Akademik Araştırma İçin Hangisini Seçmeli?"
+author: "Medyan İstatistik"
+date: "2026-02-20"
+categories: [SPSS, R, Genel]
+image: "spss_vs_r.png"
+description: "Tez çalışmanız veya akademik makaleniz için SPSS mi R mı kullanmalısınız? Her iki programın avantaj ve dezavantajlarını karşılaştırıyoruz."
+lang: tr
+---
+
+## Giriş
+
+Akademik araştırmalarda en çok karşılaşılan sorulardan biri: *"SPSS mi kullanmalıyım yoksa R mı?"*. Her iki program da güçlü istatistiksel analiz araçlarıdır, ancak farklı ihtiyaçlara cevap verirler.
+
+## Karşılaştırma Tablosu
+
+| Özellik | SPSS | R |
+|---------|------|---|
+| **Fiyat** | Ücretli (lisans) | Ücretsiz (açık kaynak) |
+| **Öğrenme eğrisi** | Kolay (arayüz) | Orta-Zor (kod) |
+| **Görselleştirme** | Temel | Gelişmiş (ggplot2) |
+| **Tekrarlanabilirlik** | Düşük | Yüksek (script) |
+| **Paket ekosistemi** | Sınırlı | 20.000+ paket |
+| **Survival analizi** | Temel | Gelişmiş |
+| **Mixed models** | Var | Daha esnek |
+| **Machine learning** | Sınırlı | Kapsamlı |
+| **Dergi tercihi** | Kabul görür | Giderek tercih ediliyor |
+
+## SPSS Ne Zaman Tercih Edilmeli?
+
+**1. Temel analizler yeterli olduğunda**
+
+- t-testi, ANOVA, ki-kare, korelasyon
+- Basit regresyon modelleri
+- Frekans tabloları
+
+**2. Zaman kısıtı varsa**
+
+SPSS'in menü tabanlı arayüzü, kod yazmadan hızlı sonuç almayı sağlar. Özellikle lisans tezlerinde tercih edilir.
+
+**3. Danışman SPSS istiyorsa**
+
+Bazı akademik danışmanlar belirli bir program tercih edebilir. Bu durumda danışmanın tercihine uymak pratik açıdan mantıklıdır.
+
+## R Ne Zaman Tercih Edilmeli?
+
+**1. Gelişmiş analizler gerektiğinde**
+
+- Sağkalım analizi (Cox regression)
+- Karma modeller (lme4)
+- Bayesian istatistik (brms)
+- Meta-analiz
+- Zaman serisi
+
+**2. Yayın kalitesinde grafik gerektiğinde**
+
+ggplot2 ile SPSS'in sunamayacağı kalitede grafikler üretebilirsiniz:
+
+```{r}
+#| fig-width: 7
+#| fig-height: 4
+#| fig-cap: "ggplot2 ile oluşturulmuş örnek bir violin plot"
+#| message: false
+library(ggplot2)
+set.seed(42)
+df <- data.frame(
+  group = rep(c("Kontrol", "Deney"), each = 50),
+  value = c(rnorm(50, 65, 12), rnorm(50, 75, 10))
+)
+
+ggplot(df, aes(x = group, y = value, fill = group)) +
+  geom_violin(alpha = 0.7, color = NA) +
+  geom_boxplot(width = 0.15, fill = "white", outlier.shape = NA) +
+  scale_fill_manual(values = c("#2E86AB", "#F18F01")) +
+  labs(x = NULL, y = "Puan") +
+  theme_minimal(base_size = 13) +
+  theme(legend.position = "none")
+```
+
+**3. Tekrarlanabilirlik önemliyse**
+
+R script'leri sayesinde analizleriniz %100 tekrarlanabilir. Veriler güncellendiğinde tüm analizi tek tıkla yeniden çalıştırabilirsiniz.
+
+## Pratik Öneri
+
+| Durum | Öneri |
+|-------|-------|
+| Lisans tezi, temel analizler | SPSS |
+| Yüksek lisans tezi | SPSS veya R |
+| Doktora tezi | R (tercihen) |
+| SCI makale | R (güçlü grafik + tekrarlanabilirlik) |
+| Kurumsal rapor | Power BI + R |
+
+## Sonuç
+
+SPSS ve R birbirini dışlayan araçlar değildir. Veri hazırlığını SPSS'te, ileri analizleri R'da yapmak bile mümkündür. Önemli olan araştırmanızın ihtiyacına en uygun aracı seçmektir.
+
+> **İpucu**: Eğer R öğrenmeye başlayacaksanız, RStudio kullanın ve tidyverse ekosistemi ile başlayın. `dplyr`, `ggplot2` ve `tidyr` paketleri iyi bir başlangıç noktasıdır.
+
+---
+
+*Her iki programda da profesyonel destek için [Medyan İstatistik Danışmanlık](https://medyanistdanismanlik.com) ile iletişime geçebilirsiniz.*

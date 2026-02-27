@@ -1,0 +1,9 @@
+/.quarto/
+/_site/
+/_freeze/
+*.html
+!index.qmd
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata

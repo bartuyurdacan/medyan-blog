@@ -1,0 +1,46 @@
+/* Medyan İstatistik Blog Theme */
+:root {
+  --primary-dark: #0a1628;
+  --accent-teal: #2dd4bf;
+}
+
+.navbar {
+  border-bottom: 2px solid rgba(45, 212, 191, 0.3);
+}
+
+div.quarto-post {
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.2rem;
+  transition: all 0.3s ease;
+  margin-bottom: 1rem;
+}
+
+div.quarto-post:hover {
+  border-color: var(--accent-teal);
+  box-shadow: 0 8px 25px rgba(45, 212, 191, 0.1);
+  transform: translateY(-2px);
+}
+
+.quarto-category {
+  background-color: rgba(45, 212, 191, 0.15) !important;
+  color: #0d9488 !important;
+  border: 1px solid rgba(45, 212, 191, 0.3) !important;
+  border-radius: 20px !important;
+  padding: 2px 10px !important;
+  font-size: 0.75rem !important;
+}
+
+div.sourceCode {
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+}
+
+.quarto-title-banner {
+  background: linear-gradient(135deg, #0a1628 0%, #1e3a5f 100%) !important;
+}
+
+.quarto-figure img {
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}

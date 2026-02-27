@@ -1,0 +1,15 @@
+---
+title: "Medyan İstatistik Blog"
+listing:
+  contents: posts
+  sort: "date desc"
+  type: default
+  categories: true
+  sort-ui: true
+  filter-ui: true
+  fields: [image, date, title, description, categories]
+page-layout: full
+title-block-banner: true
+---
+
+R, SPSS ve Python ile akademik araştırma, veri analizi ve görselleştirme üzerine rehberler ve ipuçları.

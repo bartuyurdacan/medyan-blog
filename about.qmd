@@ -1,0 +1,38 @@
+---
+title: "Hakkımızda"
+image: profile.jpg
+about:
+  template: jolla
+  links:
+    - icon: globe
+      text: Web Sitemiz
+      href: https://medyanistdanismanlik.com
+    - icon: whatsapp
+      text: WhatsApp
+      href: https://wa.me/905394893522
+    - icon: instagram
+      text: Instagram
+      href: https://www.instagram.com/medyanistatistikdanismanlik/
+    - icon: envelope
+      text: E-posta
+      href: mailto:info@medyanistdanismanlik.com
+---
+
+## Medyan İstatistik Danışmanlık
+
+Akademik araştırmalardan kurumsal projelere kadar geniş bir yelpazede **veri analizi** ve **istatistik danışmanlık** hizmeti sunan profesyonel bir firmayız.
+
+**R, SPSS, Python ve Power BI** ile 500'den fazla projeyi başarıyla tamamladık.
+
+### Uzmanlık Alanlarımız
+
+- İstatistiksel analiz (parametrik, non-parametrik, regresyon, survival, mixed models)
+- Veri görselleştirme (ggplot2, Power BI dashboards)
+- Akademik tez ve makale danışmanlığı
+- Anket tasarımı ve veri toplama
+- İstatistik eğitimleri (bireysel ve kurumsal)
+
+### İletişim
+
+📧 info@medyanistdanismanlik.com
+📱 +90 539 489 35 22

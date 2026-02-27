@@ -1,0 +1,45 @@
+project:
+  type: website
+  output-dir: _site
+
+website:
+  title: "Medyan İstatistik Blog"
+  description: "R, SPSS ve Python ile istatistik analiz rehberleri ve akademik ipuçları"
+  site-url: https://blog.medyanistdanismanlik.com
+  navbar:
+    background: "#0a1628"
+    foreground: "#f1f5f9"
+    logo: logo.png
+    left:
+      - href: index.qmd
+        text: Ana Sayfa
+      - href: about.qmd
+        text: Hakkımızda
+    right:
+      - icon: globe
+        href: https://medyanistdanismanlik.com
+        text: Web Sitemiz
+      - icon: whatsapp
+        href: https://wa.me/905394893522
+      - icon: instagram
+        href: https://www.instagram.com/medyanistatistikdanismanlik/
+  page-footer:
+    center: |
+      &copy; 2026 Medyan İstatistik Danışmanlık |
+      [medyanistdanismanlik.com](https://medyanistdanismanlik.com)
+    background: "#0a1628"
+
+format:
+  html:
+    theme:
+      light: cosmo
+    css: styles.css
+    toc: true
+    toc-title: "İçindekiler"
+    code-fold: true
+    code-summary: "Kodu Göster"
+    code-tools: true
+    highlight-style: github
+
+execute:
+  freeze: auto

@@ -1,0 +1,141 @@
+---
+title: "ggplot2 ile APA Formatında Akademik Grafikler"
+author: "Medyan İstatistik"
+date: "2026-02-25"
+categories: [R, ggplot2, Görselleştirme]
+image: "apa_grafik.png"
+description: "Akademik makaleler için APA standardına uygun grafikler nasıl oluşturulur? ggplot2 ile bar chart, box plot ve scatter plot örnekleri."
+lang: tr
+---
+
+## Giriş
+
+Akademik makalelerde grafikler, bulguların etkili sunumu için kritik öneme sahiptir. **APA (American Psychological Association)** formatı, birçok sosyal bilim ve sağlık bilimleri dergisinde standart olarak kullanılır.
+
+Bu yazıda ggplot2 ile APA standardına uygun grafikler oluşturacağız.
+
+## APA Grafik Kuralları
+
+- **Arka plan**: Beyaz (grid çizgileri minimumda)
+- **Font**: Sans-serif (Arial, Helvetica)
+- **Renk**: Siyah-beyaz baskıda da anlaşılır olmalı
+- **Eksen etiketleri**: Açık ve anlaşılır
+- **Başlık**: Figür numarası ile (Figure 1, Figure 2...)
+
+## Temel APA Teması
+
+```{r}
+#| message: false
+library(ggplot2)
+library(dplyr)
+
+# APA teması
+theme_apa <- function(base_size = 12) {
+  theme_classic(base_size = base_size) %+replace%
+    theme(
+      text = element_text(family = "sans"),
+      plot.title = element_text(face = "bold", size = base_size + 2,
+                                hjust = 0, margin = margin(b = 10)),
+      axis.title = element_text(face = "bold"),
+      axis.text = element_text(color = "black"),
+      legend.position = "bottom",
+      legend.title = element_text(face = "bold"),
+      panel.grid = element_blank(),
+      strip.background = element_blank(),
+      strip.text = element_text(face = "bold")
+    )
+}
+```
+
+## Örnek 1: Grup Karşılaştırma (Bar Chart)
+
+```{r}
+#| fig-width: 8
+#| fig-height: 5
+#| fig-cap: "Figure 1. Tedavi gruplarına göre ortalama skor karşılaştırması. Hata çubukları ±1 standart hatayı göstermektedir."
+
+set.seed(42)
+df_bar <- data.frame(
+  group = rep(c("Kontrol", "Tedavi A", "Tedavi B"), each = 30),
+  score = c(rnorm(30, 50, 10), rnorm(30, 62, 12), rnorm(30, 58, 11))
+)
+
+summary_df <- df_bar |>
+  group_by(group) |>
+  summarise(
+    mean_score = mean(score),
+    se = sd(score) / sqrt(n()),
+    .groups = "drop"
+  )
+
+ggplot(summary_df, aes(x = group, y = mean_score, fill = group)) +
+  geom_col(width = 0.6, color = "black", linewidth = 0.3) +
+  geom_errorbar(aes(ymin = mean_score - se, ymax = mean_score + se),
+                width = 0.15, linewidth = 0.5) +
+  scale_fill_manual(values = c("gray80", "gray50", "gray30")) +
+  labs(x = "Tedavi Grubu", y = "Ortalama Skor (±SE)") +
+  theme_apa() +
+  theme(legend.position = "none") +
+  coord_cartesian(ylim = c(0, 80))
+```
+
+## Örnek 2: Box Plot
+
+```{r}
+#| fig-width: 8
+#| fig-height: 5
+#| fig-cap: "Figure 2. Tedavi gruplarına göre skor dağılımları."
+
+ggplot(df_bar, aes(x = group, y = score, fill = group)) +
+  geom_boxplot(outlier.shape = 21, width = 0.5, color = "black") +
+  geom_jitter(width = 0.1, alpha = 0.3, size = 1.5) +
+  scale_fill_manual(values = c("gray90", "gray65", "gray40")) +
+  labs(x = "Tedavi Grubu", y = "Skor") +
+  theme_apa() +
+  theme(legend.position = "none")
+```
+
+## Örnek 3: Scatter Plot + Regresyon
+
+```{r}
+#| fig-width: 8
+#| fig-height: 5
+#| fig-cap: "Figure 3. Çalışma saati ile sınav puanı arasındaki ilişki."
+
+set.seed(42)
+df_scatter <- data.frame(
+  study_hours = runif(80, 1, 10),
+  exam_score = NA
+)
+df_scatter$exam_score <- 35 + 5.5 * df_scatter$study_hours + rnorm(80, 0, 8)
+
+model <- lm(exam_score ~ study_hours, data = df_scatter)
+r2 <- summary(model)$r.squared
+
+ggplot(df_scatter, aes(x = study_hours, y = exam_score)) +
+  geom_point(shape = 21, fill = "gray60", size = 2.5, stroke = 0.5) +
+  geom_smooth(method = "lm", color = "black", fill = "gray85", linewidth = 0.8) +
+  annotate("text", x = 2, y = 90,
+           label = paste0("R² = ", round(r2, 3)),
+           fontface = "italic", size = 4.5) +
+  labs(x = "Günlük Çalışma Saati", y = "Sınav Puanı") +
+  theme_apa()
+```
+
+## Grafikleri Kaydetme
+
+```{r}
+#| eval: false
+# Yüksek çözünürlükte kaydetme (dergi için)
+ggsave("figure1.png", width = 8, height = 5, dpi = 300, bg = "white")
+ggsave("figure1.tiff", width = 8, height = 5, dpi = 600, bg = "white")  # TIFF formatı
+ggsave("figure1.pdf", width = 8, height = 5)  # Vektör format
+```
+
+## Sonuç
+
+ggplot2 ile APA formatında grafik oluşturmak birkaç satır tema ayarı ile mümkündür. Kendi `theme_apa()` fonksiyonunuzu tanımlayarak tüm grafiklerinizde tutarlı bir stil yakalayabilirsiniz.
+
+---
+
+*Akademik grafikler ve veri görselleştirme için destek almak isterseniz [bize ulaşın](https://medyanistdanismanlik.com).*
