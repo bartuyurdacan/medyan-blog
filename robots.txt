@@ -1,1 +1,1 @@
-Sitemap: https://bartuyurdacan.github.io/medyan-blog/sitemap.xml
+Sitemap: https://bartuyurdacan.github.io/blog/sitemap.xml
