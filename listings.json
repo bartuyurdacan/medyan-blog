@@ -1,0 +1,20 @@
+[
+  {
+    "listing": "/index.html",
+    "items": [
+      "/posts/kaplan-meier-r/index.html",
+      "/posts/fastml-wine/index.html",
+      "/posts/gtsummary-tablo/index.html",
+      "/posts/ggplot2-apa-grafik/index.html"
+    ]
+  },
+  {
+    "listing": "/en.html",
+    "items": [
+      "/posts-en/kaplan-meier-r/index.html",
+      "/posts-en/fastml-wine/index.html",
+      "/posts-en/gtsummary-tables/index.html",
+      "/posts-en/ggplot2-apa-charts/index.html"
+    ]
+  }
+]

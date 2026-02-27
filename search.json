@@ -1,0 +1,555 @@
+[
+  {
+    "objectID": "posts-en/kaplan-meier-r/index.html",
+    "href": "posts-en/kaplan-meier-r/index.html",
+    "title": "Kaplan-Meier Survival Analysis in R: Step-by-Step Guide",
+    "section": "",
+    "text": "Survival analysis is one of the essential statistical methods in medical research. It is used to analyze the time until an event occurs (death, recurrence, recovery, etc.).\nIn this guide, you will learn how to create Kaplan-Meier curves, compare groups with the log-rank test, and produce publication-quality graphics."
+  },
+  {
+    "objectID": "posts-en/kaplan-meier-r/index.html#introduction",
+    "href": "posts-en/kaplan-meier-r/index.html#introduction",
+    "title": "Kaplan-Meier Survival Analysis in R: Step-by-Step Guide",
+    "section": "",
+    "text": "Survival analysis is one of the essential statistical methods in medical research. It is used to analyze the time until an event occurs (death, recurrence, recovery, etc.).\nIn this guide, you will learn how to create Kaplan-Meier curves, compare groups with the log-rank test, and produce publication-quality graphics."
+  },
+  {
+    "objectID": "posts-en/kaplan-meier-r/index.html#required-packages",
+    "href": "posts-en/kaplan-meier-r/index.html#required-packages",
+    "title": "Kaplan-Meier Survival Analysis in R: Step-by-Step Guide",
+    "section": "Required Packages",
+    "text": "Required Packages\n\n\nKodu Göster\nlibrary(survival)\nlibrary(survminer)"
+  },
+  {
+    "objectID": "posts-en/kaplan-meier-r/index.html#data-preparation",
+    "href": "posts-en/kaplan-meier-r/index.html#data-preparation",
+    "title": "Kaplan-Meier Survival Analysis in R: Step-by-Step Guide",
+    "section": "Data Preparation",
+    "text": "Data Preparation\nLet’s create a simulated clinical trial dataset: 200 patients in Drug and Placebo groups.\n\n\nKodu Göster\nset.seed(42)\nn &lt;- 200\n\ndf &lt;- data.frame(\n  time = c(rweibull(n/2, shape = 1.2, scale = 24),\n           rweibull(n/2, shape = 1.0, scale = 16)),\n  status = sample(0:1, n, replace = TRUE, prob = c(0.25, 0.75)),\n  group = rep(c(\"Drug\", \"Placebo\"), each = n/2)\n)\n\nhead(df)\n\n\n       time status group\n1  3.198001      0  Drug\n2  2.459944      1  Drug\n3 28.929355      0  Drug\n4  5.902881      1  Drug\n5 12.190112      1  Drug\n6 16.882902      1  Drug"
+  },
+  {
+    "objectID": "posts-en/kaplan-meier-r/index.html#kaplan-meier-curves",
+    "href": "posts-en/kaplan-meier-r/index.html#kaplan-meier-curves",
+    "title": "Kaplan-Meier Survival Analysis in R: Step-by-Step Guide",
+    "section": "Kaplan-Meier Curves",
+    "text": "Kaplan-Meier Curves\n\n\nKodu Göster\n# Create survival object\nsurv_obj &lt;- Surv(time = df$time, event = df$status)\n\n# KM fit\nkm_fit &lt;- survfit(surv_obj ~ group, data = df)\n\n# Log-rank test\nlr_test &lt;- survdiff(surv_obj ~ group, data = df)\np_val &lt;- 1 - pchisq(lr_test$chisq, df = 1)\n\n# Plot\nggsurvplot(\n  km_fit,\n  data = df,\n  pval = TRUE,\n  conf.int = TRUE,\n  risk.table = TRUE,\n  risk.table.col = \"strata\",\n  palette = c(\"#2E86AB\", \"#C73E1D\"),\n  xlab = \"Time (months)\",\n  ylab = \"Survival Probability\",\n  title = \"Kaplan-Meier Survival Curves\",\n  legend.title = \"Group\",\n  legend.labs = c(\"Drug\", \"Placebo\"),\n  ggtheme = theme_minimal(base_size = 13)\n)\n\n\nWarning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.\nℹ Please use `linewidth` instead.\nℹ The deprecated feature was likely used in the ggpubr package.\n  Please report the issue at &lt;https://github.com/kassambara/ggpubr/issues&gt;.\n\n\n\n\n\nKaplan-Meier survival curves: Drug vs Placebo groups"
+  },
+  {
+    "objectID": "posts-en/kaplan-meier-r/index.html#interpreting-the-results",
+    "href": "posts-en/kaplan-meier-r/index.html#interpreting-the-results",
+    "title": "Kaplan-Meier Survival Analysis in R: Step-by-Step Guide",
+    "section": "Interpreting the Results",
+    "text": "Interpreting the Results\n\nMedian survival time: Obtained via summary(km_fit)\nLog-rank p-value: Is the difference between groups statistically significant?\nConfidence intervals: The shaded area around the curve represents the 95% CI\n\n\n\nKodu Göster\n# Median survival times\nprint(km_fit)\n\n\nCall: survfit(formula = surv_obj ~ group, data = df)\n\n                n events median 0.95LCL 0.95UCL\ngroup=Drug    100     79   20.0   16.88    25.2\ngroup=Placebo 100     74   12.7    8.72    18.4"
+  },
+  {
+    "objectID": "posts-en/kaplan-meier-r/index.html#tips-for-academic-use",
+    "href": "posts-en/kaplan-meier-r/index.html#tips-for-academic-use",
+    "title": "Kaplan-Meier Survival Analysis in R: Step-by-Step Guide",
+    "section": "Tips for Academic Use",
+    "text": "Tips for Academic Use\n\nResolution: Save with at least 300 DPI using ggsave()\nRisk table: Always include in journal submissions\nCensoring: Censored observations are shown with “+” marks\nReporting: Write as “Median survival was X months (95% CI: Y-Z)”"
+  },
+  {
+    "objectID": "posts-en/kaplan-meier-r/index.html#conclusion",
+    "href": "posts-en/kaplan-meier-r/index.html#conclusion",
+    "title": "Kaplan-Meier Survival Analysis in R: Step-by-Step Guide",
+    "section": "Conclusion",
+    "text": "Conclusion\nThe survival and survminer packages in R make it straightforward to produce publication-quality Kaplan-Meier analyses. Prepare your data, write a few lines of code, and get graphics ready for your manuscript.\n\nFor survival analysis or other statistical analyses, contact Medyan Statistics Consulting."
+  },
+  {
+    "objectID": "posts-en/ggplot2-apa-charts/index.html",
+    "href": "posts-en/ggplot2-apa-charts/index.html",
+    "title": "Academic Charts in APA Format with ggplot2",
+    "section": "",
+    "text": "In academic papers, charts are critical for effective presentation of findings. The APA (American Psychological Association) format is the standard in many social science and health science journals.\nIn this post, we will create APA-compliant charts using ggplot2."
+  },
+  {
+    "objectID": "posts-en/ggplot2-apa-charts/index.html#introduction",
+    "href": "posts-en/ggplot2-apa-charts/index.html#introduction",
+    "title": "Academic Charts in APA Format with ggplot2",
+    "section": "",
+    "text": "In academic papers, charts are critical for effective presentation of findings. The APA (American Psychological Association) format is the standard in many social science and health science journals.\nIn this post, we will create APA-compliant charts using ggplot2."
+  },
+  {
+    "objectID": "posts-en/ggplot2-apa-charts/index.html#apa-chart-guidelines",
+    "href": "posts-en/ggplot2-apa-charts/index.html#apa-chart-guidelines",
+    "title": "Academic Charts in APA Format with ggplot2",
+    "section": "APA Chart Guidelines",
+    "text": "APA Chart Guidelines\n\nBackground: White (minimal grid lines)\nFont: Sans-serif (Arial, Helvetica)\nColor: Must be readable in black-and-white print\nAxis labels: Clear and descriptive\nTitle: With figure number (Figure 1, Figure 2…)"
+  },
+  {
+    "objectID": "posts-en/ggplot2-apa-charts/index.html#base-apa-theme",
+    "href": "posts-en/ggplot2-apa-charts/index.html#base-apa-theme",
+    "title": "Academic Charts in APA Format with ggplot2",
+    "section": "Base APA Theme",
+    "text": "Base APA Theme\n\n\nKodu Göster\nlibrary(ggplot2)\n\n\nWarning: package 'ggplot2' was built under R version 4.5.2\n\n\nKodu Göster\nlibrary(dplyr)\n\n# APA theme\ntheme_apa &lt;- function(base_size = 12) {\n  theme_classic(base_size = base_size) %+replace%\n    theme(\n      text = element_text(family = \"sans\"),\n      plot.title = element_text(face = \"bold\", size = base_size + 2,\n                                hjust = 0, margin = margin(b = 10)),\n      axis.title = element_text(face = \"bold\"),\n      axis.text = element_text(color = \"black\"),\n      legend.position = \"bottom\",\n      legend.title = element_text(face = \"bold\"),\n      panel.grid = element_blank(),\n      strip.background = element_blank(),\n      strip.text = element_text(face = \"bold\")\n    )\n}"
+  },
+  {
+    "objectID": "posts-en/ggplot2-apa-charts/index.html#example-1-group-comparison-bar-chart",
+    "href": "posts-en/ggplot2-apa-charts/index.html#example-1-group-comparison-bar-chart",
+    "title": "Academic Charts in APA Format with ggplot2",
+    "section": "Example 1: Group Comparison (Bar Chart)",
+    "text": "Example 1: Group Comparison (Bar Chart)\n\n\nKodu Göster\nset.seed(42)\ndf_bar &lt;- data.frame(\n  group = rep(c(\"Control\", \"Treatment A\", \"Treatment B\"), each = 30),\n  score = c(rnorm(30, 50, 10), rnorm(30, 62, 12), rnorm(30, 58, 11))\n)\n\nsummary_df &lt;- df_bar |&gt;\n  group_by(group) |&gt;\n  summarise(\n    mean_score = mean(score),\n    se = sd(score) / sqrt(n()),\n    .groups = \"drop\"\n  )\n\nggplot(summary_df, aes(x = group, y = mean_score, fill = group)) +\n  geom_col(width = 0.6, color = \"black\", linewidth = 0.3) +\n  geom_errorbar(aes(ymin = mean_score - se, ymax = mean_score + se),\n                width = 0.15, linewidth = 0.5) +\n  scale_fill_manual(values = c(\"gray80\", \"gray50\", \"gray30\")) +\n  labs(x = \"Treatment Group\", y = \"Mean Score (±SE)\") +\n  theme_apa() +\n  theme(legend.position = \"none\") +\n  coord_cartesian(ylim = c(0, 80))\n\n\n\n\n\nFigure 1. Mean score comparison by treatment group. Error bars represent ±1 standard error."
+  },
+  {
+    "objectID": "posts-en/ggplot2-apa-charts/index.html#example-2-box-plot",
+    "href": "posts-en/ggplot2-apa-charts/index.html#example-2-box-plot",
+    "title": "Academic Charts in APA Format with ggplot2",
+    "section": "Example 2: Box Plot",
+    "text": "Example 2: Box Plot\n\n\nKodu Göster\nggplot(df_bar, aes(x = group, y = score, fill = group)) +\n  geom_boxplot(outlier.shape = 21, width = 0.5, color = \"black\") +\n  geom_jitter(width = 0.1, alpha = 0.3, size = 1.5) +\n  scale_fill_manual(values = c(\"gray90\", \"gray65\", \"gray40\")) +\n  labs(x = \"Treatment Group\", y = \"Score\") +\n  theme_apa() +\n  theme(legend.position = \"none\")\n\n\n\n\n\nFigure 2. Score distributions by treatment group."
+  },
+  {
+    "objectID": "posts-en/ggplot2-apa-charts/index.html#example-3-scatter-plot-regression",
+    "href": "posts-en/ggplot2-apa-charts/index.html#example-3-scatter-plot-regression",
+    "title": "Academic Charts in APA Format with ggplot2",
+    "section": "Example 3: Scatter Plot + Regression",
+    "text": "Example 3: Scatter Plot + Regression\n\n\nKodu Göster\nset.seed(42)\ndf_scatter &lt;- data.frame(\n  study_hours = runif(80, 1, 10),\n  exam_score = NA\n)\ndf_scatter$exam_score &lt;- 35 + 5.5 * df_scatter$study_hours + rnorm(80, 0, 8)\n\nmodel &lt;- lm(exam_score ~ study_hours, data = df_scatter)\nr2 &lt;- summary(model)$r.squared\n\nggplot(df_scatter, aes(x = study_hours, y = exam_score)) +\n  geom_point(shape = 21, fill = \"gray60\", size = 2.5, stroke = 0.5) +\n  geom_smooth(method = \"lm\", color = \"black\", fill = \"gray85\", linewidth = 0.8) +\n  annotate(\"text\", x = 2, y = 90,\n           label = paste0(\"R² = \", round(r2, 3)),\n           fontface = \"italic\", size = 4.5) +\n  labs(x = \"Daily Study Hours\", y = \"Exam Score\") +\n  theme_apa()\n\n\n`geom_smooth()` using formula = 'y ~ x'\n\n\n\n\n\nFigure 3. Relationship between study hours and exam score."
+  },
+  {
+    "objectID": "posts-en/ggplot2-apa-charts/index.html#saving-charts",
+    "href": "posts-en/ggplot2-apa-charts/index.html#saving-charts",
+    "title": "Academic Charts in APA Format with ggplot2",
+    "section": "Saving Charts",
+    "text": "Saving Charts\n\n\nKodu Göster\n# High-resolution saving (for journals)\nggsave(\"figure1.png\", width = 8, height = 5, dpi = 300, bg = \"white\")\nggsave(\"figure1.tiff\", width = 8, height = 5, dpi = 600, bg = \"white\")  # TIFF format\nggsave(\"figure1.pdf\", width = 8, height = 5)  # Vector format"
+  },
+  {
+    "objectID": "posts-en/ggplot2-apa-charts/index.html#conclusion",
+    "href": "posts-en/ggplot2-apa-charts/index.html#conclusion",
+    "title": "Academic Charts in APA Format with ggplot2",
+    "section": "Conclusion",
+    "text": "Conclusion\nCreating APA-formatted charts with ggplot2 is possible with just a few lines of theme configuration. By defining your own theme_apa() function, you can achieve a consistent style across all your figures.\n\nFor academic charts and data visualization support, contact us."
+  },
+  {
+    "objectID": "posts/kaplan-meier-r/index.html",
+    "href": "posts/kaplan-meier-r/index.html",
+    "title": "R ile Kaplan-Meier Sağkalım Analizi: Adım Adım Rehber",
+    "section": "",
+    "text": "Sağkalım analizi (survival analysis), tıbbi araştırmaların vazgeçilmez istatistiksel yöntemlerinden biridir. Bir olayın (ölüm, nüks, iyileşme vb.) gerçekleşme süresini analiz etmek için kullanılır.\nBu rehberde Kaplan-Meier eğrisi oluşturmayı, log-rank testi ile grupları karşılaştırmayı ve yayın kalitesinde grafik üretmeyi öğreneceksiniz."
+  },
+  {
+    "objectID": "posts/kaplan-meier-r/index.html#giriş",
+    "href": "posts/kaplan-meier-r/index.html#giriş",
+    "title": "R ile Kaplan-Meier Sağkalım Analizi: Adım Adım Rehber",
+    "section": "",
+    "text": "Sağkalım analizi (survival analysis), tıbbi araştırmaların vazgeçilmez istatistiksel yöntemlerinden biridir. Bir olayın (ölüm, nüks, iyileşme vb.) gerçekleşme süresini analiz etmek için kullanılır.\nBu rehberde Kaplan-Meier eğrisi oluşturmayı, log-rank testi ile grupları karşılaştırmayı ve yayın kalitesinde grafik üretmeyi öğreneceksiniz."
+  },
+  {
+    "objectID": "posts/kaplan-meier-r/index.html#gerekli-paketler",
+    "href": "posts/kaplan-meier-r/index.html#gerekli-paketler",
+    "title": "R ile Kaplan-Meier Sağkalım Analizi: Adım Adım Rehber",
+    "section": "Gerekli Paketler",
+    "text": "Gerekli Paketler\n\n\nKodu Göster\nlibrary(survival)\nlibrary(survminer)"
+  },
+  {
+    "objectID": "posts/kaplan-meier-r/index.html#veri-hazırlama",
+    "href": "posts/kaplan-meier-r/index.html#veri-hazırlama",
+    "title": "R ile Kaplan-Meier Sağkalım Analizi: Adım Adım Rehber",
+    "section": "Veri Hazırlama",
+    "text": "Veri Hazırlama\nSimüle edilmiş bir klinik çalışma verisi oluşturalım: İlaç ve Plasebo gruplarında 200 hasta.\n\n\nKodu Göster\nset.seed(42)\nn &lt;- 200\n\ndf &lt;- data.frame(\n  time = c(rweibull(n/2, shape = 1.2, scale = 24),\n           rweibull(n/2, shape = 1.0, scale = 16)),\n  status = sample(0:1, n, replace = TRUE, prob = c(0.25, 0.75)),\n  group = rep(c(\"Drug\", \"Placebo\"), each = n/2)\n)\n\nhead(df)\n\n\n       time status group\n1  3.198001      0  Drug\n2  2.459944      1  Drug\n3 28.929355      0  Drug\n4  5.902881      1  Drug\n5 12.190112      1  Drug\n6 16.882902      1  Drug"
+  },
+  {
+    "objectID": "posts/kaplan-meier-r/index.html#kaplan-meier-eğrisi",
+    "href": "posts/kaplan-meier-r/index.html#kaplan-meier-eğrisi",
+    "title": "R ile Kaplan-Meier Sağkalım Analizi: Adım Adım Rehber",
+    "section": "Kaplan-Meier Eğrisi",
+    "text": "Kaplan-Meier Eğrisi\n\n\nKodu Göster\n# Survival objesi oluştur\nsurv_obj &lt;- Surv(time = df$time, event = df$status)\n\n# KM fit\nkm_fit &lt;- survfit(surv_obj ~ group, data = df)\n\n# Log-rank testi\nlr_test &lt;- survdiff(surv_obj ~ group, data = df)\np_val &lt;- 1 - pchisq(lr_test$chisq, df = 1)\n\n# Grafik\nggsurvplot(\n  km_fit,\n  data = df,\n  pval = TRUE,\n  conf.int = TRUE,\n  risk.table = TRUE,\n  risk.table.col = \"strata\",\n  palette = c(\"#2E86AB\", \"#C73E1D\"),\n  xlab = \"Time (months)\",\n  ylab = \"Survival Probability\",\n  title = \"Kaplan-Meier Survival Curves\",\n  legend.title = \"Group\",\n  legend.labs = c(\"Drug\", \"Placebo\"),\n  ggtheme = theme_minimal(base_size = 13)\n)\n\n\nWarning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.\nℹ Please use `linewidth` instead.\nℹ The deprecated feature was likely used in the ggpubr package.\n  Please report the issue at &lt;https://github.com/kassambara/ggpubr/issues&gt;.\n\n\n\n\n\nKaplan-Meier sağkalım eğrileri: İlaç vs Plasebo grupları"
+  },
+  {
+    "objectID": "posts/kaplan-meier-r/index.html#sonuçların-yorumlanması",
+    "href": "posts/kaplan-meier-r/index.html#sonuçların-yorumlanması",
+    "title": "R ile Kaplan-Meier Sağkalım Analizi: Adım Adım Rehber",
+    "section": "Sonuçların Yorumlanması",
+    "text": "Sonuçların Yorumlanması\n\nMedyan sağkalım süresi: summary(km_fit) ile elde edilir\nLog-rank p değeri: Gruplar arası fark istatistiksel olarak anlamlı mı?\nGüven aralıkları: Eğrinin çevresindeki gölgeli alan %95 GA’yı gösterir\n\n\n\nKodu Göster\n# Medyan sağkalım süreleri\nprint(km_fit)\n\n\nCall: survfit(formula = surv_obj ~ group, data = df)\n\n                n events median 0.95LCL 0.95UCL\ngroup=Drug    100     79   20.0   16.88    25.2\ngroup=Placebo 100     74   12.7    8.72    18.4"
+  },
+  {
+    "objectID": "posts/kaplan-meier-r/index.html#akademik-kullanım-ipuçları",
+    "href": "posts/kaplan-meier-r/index.html#akademik-kullanım-ipuçları",
+    "title": "R ile Kaplan-Meier Sağkalım Analizi: Adım Adım Rehber",
+    "section": "Akademik Kullanım İpuçları",
+    "text": "Akademik Kullanım İpuçları\n\nGrafik çözünürlüğü: ggsave() ile en az 300 DPI kaydedin\nRisk tablosu: Dergi başvurularında mutlaka ekleyin\nSansürleme: Sansürlü gözlemler “+” işareti ile gösterilir\nRaporlama: “Medyan sağkalım X ay (%95 GA: Y-Z) olarak hesaplandı” şeklinde yazın"
+  },
+  {
+    "objectID": "posts/kaplan-meier-r/index.html#sonuç",
+    "href": "posts/kaplan-meier-r/index.html#sonuç",
+    "title": "R ile Kaplan-Meier Sağkalım Analizi: Adım Adım Rehber",
+    "section": "Sonuç",
+    "text": "Sonuç\nR’daki survival ve survminer paketleri ile yayın kalitesinde Kaplan-Meier analizi yapmak oldukça kolaydır. Verilerinizi hazırlayın, birkaç satır kod yazın ve makalenize eklenmeye hazır grafikler elde edin.\n\nSağkalım analizi veya diğer istatistiksel analizler için profesyonel destek almak isterseniz Medyan İstatistik Danışmanlık ile iletişime geçin."
+  },
+  {
+    "objectID": "posts/ggplot2-apa-grafik/index.html",
+    "href": "posts/ggplot2-apa-grafik/index.html",
+    "title": "ggplot2 ile APA Formatında Akademik Grafikler",
+    "section": "",
+    "text": "Akademik makalelerde grafikler, bulguların etkili sunumu için kritik öneme sahiptir. APA (American Psychological Association) formatı, birçok sosyal bilim ve sağlık bilimleri dergisinde standart olarak kullanılır.\nBu yazıda ggplot2 ile APA standardına uygun grafikler oluşturacağız."
+  },
+  {
+    "objectID": "posts/ggplot2-apa-grafik/index.html#giriş",
+    "href": "posts/ggplot2-apa-grafik/index.html#giriş",
+    "title": "ggplot2 ile APA Formatında Akademik Grafikler",
+    "section": "",
+    "text": "Akademik makalelerde grafikler, bulguların etkili sunumu için kritik öneme sahiptir. APA (American Psychological Association) formatı, birçok sosyal bilim ve sağlık bilimleri dergisinde standart olarak kullanılır.\nBu yazıda ggplot2 ile APA standardına uygun grafikler oluşturacağız."
+  },
+  {
+    "objectID": "posts/ggplot2-apa-grafik/index.html#apa-grafik-kuralları",
+    "href": "posts/ggplot2-apa-grafik/index.html#apa-grafik-kuralları",
+    "title": "ggplot2 ile APA Formatında Akademik Grafikler",
+    "section": "APA Grafik Kuralları",
+    "text": "APA Grafik Kuralları\n\nArka plan: Beyaz (grid çizgileri minimumda)\nFont: Sans-serif (Arial, Helvetica)\nRenk: Siyah-beyaz baskıda da anlaşılır olmalı\nEksen etiketleri: Açık ve anlaşılır\nBaşlık: Figür numarası ile (Figure 1, Figure 2…)"
+  },
+  {
+    "objectID": "posts/ggplot2-apa-grafik/index.html#temel-apa-teması",
+    "href": "posts/ggplot2-apa-grafik/index.html#temel-apa-teması",
+    "title": "ggplot2 ile APA Formatında Akademik Grafikler",
+    "section": "Temel APA Teması",
+    "text": "Temel APA Teması\n\n\nKodu Göster\nlibrary(ggplot2)\n\n\nWarning: package 'ggplot2' was built under R version 4.5.2\n\n\nKodu Göster\nlibrary(dplyr)\n\n# APA teması\ntheme_apa &lt;- function(base_size = 12) {\n  theme_classic(base_size = base_size) %+replace%\n    theme(\n      text = element_text(family = \"sans\"),\n      plot.title = element_text(face = \"bold\", size = base_size + 2,\n                                hjust = 0, margin = margin(b = 10)),\n      axis.title = element_text(face = \"bold\"),\n      axis.text = element_text(color = \"black\"),\n      legend.position = \"bottom\",\n      legend.title = element_text(face = \"bold\"),\n      panel.grid = element_blank(),\n      strip.background = element_blank(),\n      strip.text = element_text(face = \"bold\")\n    )\n}"
+  },
+  {
+    "objectID": "posts/ggplot2-apa-grafik/index.html#örnek-1-grup-karşılaştırma-bar-chart",
+    "href": "posts/ggplot2-apa-grafik/index.html#örnek-1-grup-karşılaştırma-bar-chart",
+    "title": "ggplot2 ile APA Formatında Akademik Grafikler",
+    "section": "Örnek 1: Grup Karşılaştırma (Bar Chart)",
+    "text": "Örnek 1: Grup Karşılaştırma (Bar Chart)\n\n\nKodu Göster\nset.seed(42)\ndf_bar &lt;- data.frame(\n  group = rep(c(\"Kontrol\", \"Tedavi A\", \"Tedavi B\"), each = 30),\n  score = c(rnorm(30, 50, 10), rnorm(30, 62, 12), rnorm(30, 58, 11))\n)\n\nsummary_df &lt;- df_bar |&gt;\n  group_by(group) |&gt;\n  summarise(\n    mean_score = mean(score),\n    se = sd(score) / sqrt(n()),\n    .groups = \"drop\"\n  )\n\nggplot(summary_df, aes(x = group, y = mean_score, fill = group)) +\n  geom_col(width = 0.6, color = \"black\", linewidth = 0.3) +\n  geom_errorbar(aes(ymin = mean_score - se, ymax = mean_score + se),\n                width = 0.15, linewidth = 0.5) +\n  scale_fill_manual(values = c(\"gray80\", \"gray50\", \"gray30\")) +\n  labs(x = \"Tedavi Grubu\", y = \"Ortalama Skor (±SE)\") +\n  theme_apa() +\n  theme(legend.position = \"none\") +\n  coord_cartesian(ylim = c(0, 80))\n\n\n\n\n\nFigure 1. Tedavi gruplarına göre ortalama skor karşılaştırması. Hata çubukları ±1 standart hatayı göstermektedir."
+  },
+  {
+    "objectID": "posts/ggplot2-apa-grafik/index.html#örnek-2-box-plot",
+    "href": "posts/ggplot2-apa-grafik/index.html#örnek-2-box-plot",
+    "title": "ggplot2 ile APA Formatında Akademik Grafikler",
+    "section": "Örnek 2: Box Plot",
+    "text": "Örnek 2: Box Plot\n\n\nKodu Göster\nggplot(df_bar, aes(x = group, y = score, fill = group)) +\n  geom_boxplot(outlier.shape = 21, width = 0.5, color = \"black\") +\n  geom_jitter(width = 0.1, alpha = 0.3, size = 1.5) +\n  scale_fill_manual(values = c(\"gray90\", \"gray65\", \"gray40\")) +\n  labs(x = \"Tedavi Grubu\", y = \"Skor\") +\n  theme_apa() +\n  theme(legend.position = \"none\")\n\n\n\n\n\nFigure 2. Tedavi gruplarına göre skor dağılımları."
+  },
+  {
+    "objectID": "posts/ggplot2-apa-grafik/index.html#örnek-3-scatter-plot-regresyon",
+    "href": "posts/ggplot2-apa-grafik/index.html#örnek-3-scatter-plot-regresyon",
+    "title": "ggplot2 ile APA Formatında Akademik Grafikler",
+    "section": "Örnek 3: Scatter Plot + Regresyon",
+    "text": "Örnek 3: Scatter Plot + Regresyon\n\n\nKodu Göster\nset.seed(42)\ndf_scatter &lt;- data.frame(\n  study_hours = runif(80, 1, 10),\n  exam_score = NA\n)\ndf_scatter$exam_score &lt;- 35 + 5.5 * df_scatter$study_hours + rnorm(80, 0, 8)\n\nmodel &lt;- lm(exam_score ~ study_hours, data = df_scatter)\nr2 &lt;- summary(model)$r.squared\n\nggplot(df_scatter, aes(x = study_hours, y = exam_score)) +\n  geom_point(shape = 21, fill = \"gray60\", size = 2.5, stroke = 0.5) +\n  geom_smooth(method = \"lm\", color = \"black\", fill = \"gray85\", linewidth = 0.8) +\n  annotate(\"text\", x = 2, y = 90,\n           label = paste0(\"R² = \", round(r2, 3)),\n           fontface = \"italic\", size = 4.5) +\n  labs(x = \"Günlük Çalışma Saati\", y = \"Sınav Puanı\") +\n  theme_apa()\n\n\n`geom_smooth()` using formula = 'y ~ x'\n\n\n\n\n\nFigure 3. Çalışma saati ile sınav puanı arasındaki ilişki."
+  },
+  {
+    "objectID": "posts/ggplot2-apa-grafik/index.html#grafikleri-kaydetme",
+    "href": "posts/ggplot2-apa-grafik/index.html#grafikleri-kaydetme",
+    "title": "ggplot2 ile APA Formatında Akademik Grafikler",
+    "section": "Grafikleri Kaydetme",
+    "text": "Grafikleri Kaydetme\n\n\nKodu Göster\n# Yüksek çözünürlükte kaydetme (dergi için)\nggsave(\"figure1.png\", width = 8, height = 5, dpi = 300, bg = \"white\")\nggsave(\"figure1.tiff\", width = 8, height = 5, dpi = 600, bg = \"white\")  # TIFF formatı\nggsave(\"figure1.pdf\", width = 8, height = 5)  # Vektör format"
+  },
+  {
+    "objectID": "posts/ggplot2-apa-grafik/index.html#sonuç",
+    "href": "posts/ggplot2-apa-grafik/index.html#sonuç",
+    "title": "ggplot2 ile APA Formatında Akademik Grafikler",
+    "section": "Sonuç",
+    "text": "Sonuç\nggplot2 ile APA formatında grafik oluşturmak birkaç satır tema ayarı ile mümkündür. Kendi theme_apa() fonksiyonunuzu tanımlayarak tüm grafiklerinizde tutarlı bir stil yakalayabilirsiniz.\n\nAkademik grafikler ve veri görselleştirme için destek almak isterseniz bize ulaşın."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Medyan İstatistik Blog",
+    "section": "",
+    "text": "R, SPSS ve Python ile akademik araştırma, veri analizi ve görselleştirme üzerine rehberler ve ipuçları.\n\n\n\n\n\n\n\n\n   \n    \n    \n      Sıralama Öğesi\n      Varsayılan\n      \n        Başlık\n      \n      \n        Tarih - En eski\n      \n      \n        Tarih - En yeni\n      \n    \n  \n    \n      \n      \n    \n\n\n\n\n\n\n\n\n\n\nR ile Kaplan-Meier Sağkalım Analizi: Adım Adım Rehber\n\n\n\nR\n\nSurvival Analysis\n\nMedicine\n\n\n\nKlinik çalışmalarda sıkça kullanılan Kaplan-Meier sağkalım analizini R’da nasıl yapacağınızı öğrenin. survival ve survminer paketleri ile adım adım uygulama.\n\n\n\n\n\n28 Şub 2026\n\n\n\n\n\n\n\n\n\n\n\n\nR fastml Paketi ile Şarap Kalitesi Tahmini: Otomatik ML Pipeline\n\n\n\nR\n\nMachine Learning\n\nfastml\n\n\n\nUCI Wine Quality veri seti üzerinde fastml paketi ile otomatik makine öğrenmesi: Random Forest, XGBoost, Elastic Net karşılaştırması ve SHAP açıklamaları.\n\n\n\n\n\n27 Şub 2026\n\n\n\n\n\n\n\n\n\n\n\n\ngtsummary ile Akademik Tablolar: Yayına Hazır Table 1 Oluşturma\n\n\n\nR\n\ngtsummary\n\nTables\n\n\n\nAkademik makalelerde sıkça kullanılan Table 1 (demografik tablo) ve regresyon tablolarını gtsummary paketi ile nasıl oluşturursunuz? Adım adım rehber.\n\n\n\n\n\n26 Şub 2026\n\n\n\n\n\n\n\n\n\n\n\n\nggplot2 ile APA Formatında Akademik Grafikler\n\n\n\nR\n\nggplot2\n\nVisualization\n\n\n\nAkademik makaleler için APA standardına uygun grafikler nasıl oluşturulur? ggplot2 ile bar chart, box plot ve scatter plot örnekleri.\n\n\n\n\n\n25 Şub 2026\n\n\n\n\n\nEşleşen öğe yok"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "Hakkımızda / About Us",
+    "section": "",
+    "text": "Akademik araştırmalardan kurumsal projelere kadar geniş bir yelpazede veri analizi ve istatistik danışmanlık hizmeti sunan profesyonel bir firmayız.\nR, SPSS, Python ve Power BI ile 500’den fazla projeyi başarıyla tamamladık.\n\n\n\nİstatistiksel analiz (parametrik, non-parametrik, regresyon, survival, mixed models)\nVeri görselleştirme (ggplot2, Power BI dashboards)\nAkademik tez ve makale danışmanlığı\nMakine öğrenmesi ve tahmine dayalı modelleme\nAnket tasarımı ve veri toplama\nİstatistik eğitimleri (bireysel ve kurumsal)"
+  },
+  {
+    "objectID": "about.html#medyan-istatistik-danışmanlık",
+    "href": "about.html#medyan-istatistik-danışmanlık",
+    "title": "Hakkımızda / About Us",
+    "section": "",
+    "text": "Akademik araştırmalardan kurumsal projelere kadar geniş bir yelpazede veri analizi ve istatistik danışmanlık hizmeti sunan profesyonel bir firmayız.\nR, SPSS, Python ve Power BI ile 500’den fazla projeyi başarıyla tamamladık.\n\n\n\nİstatistiksel analiz (parametrik, non-parametrik, regresyon, survival, mixed models)\nVeri görselleştirme (ggplot2, Power BI dashboards)\nAkademik tez ve makale danışmanlığı\nMakine öğrenmesi ve tahmine dayalı modelleme\nAnket tasarımı ve veri toplama\nİstatistik eğitimleri (bireysel ve kurumsal)"
+  },
+  {
+    "objectID": "about.html#about-us",
+    "href": "about.html#about-us",
+    "title": "Hakkımızda / About Us",
+    "section": "About Us",
+    "text": "About Us\nWe are a professional firm offering data analysis and statistical consulting services across a wide range of fields, from academic research to corporate projects.\nWe have successfully completed over 500 projects using R, SPSS, Python, and Power BI.\n\nContact / İletişim\n📧 info@medyanistdanismanlik.com 📱 +90 539 489 35 22"
+  },
+  {
+    "objectID": "about-en.html",
+    "href": "about-en.html",
+    "title": "About Us",
+    "section": "",
+    "text": "We are a professional firm offering data analysis and statistical consulting services across a wide range of fields, from academic research to corporate projects.\nWe have successfully completed over 500 projects using R, SPSS, Python, and Power BI.\n\n\n\nStatistical analysis (parametric, non-parametric, regression, survival, mixed models)\nData visualization (ggplot2, Power BI dashboards)\nAcademic thesis and manuscript consulting\nMachine learning and predictive modeling\nSurvey design and data collection\nStatistical training (individual and corporate)\n\n\n\n\n📧 info@medyanistdanismanlik.com 📱 +90 539 489 35 22"
+  },
+  {
+    "objectID": "about-en.html#medyan-statistics-consulting",
+    "href": "about-en.html#medyan-statistics-consulting",
+    "title": "About Us",
+    "section": "",
+    "text": "We are a professional firm offering data analysis and statistical consulting services across a wide range of fields, from academic research to corporate projects.\nWe have successfully completed over 500 projects using R, SPSS, Python, and Power BI.\n\n\n\nStatistical analysis (parametric, non-parametric, regression, survival, mixed models)\nData visualization (ggplot2, Power BI dashboards)\nAcademic thesis and manuscript consulting\nMachine learning and predictive modeling\nSurvey design and data collection\nStatistical training (individual and corporate)\n\n\n\n\n📧 info@medyanistdanismanlik.com 📱 +90 539 489 35 22"
+  },
+  {
+    "objectID": "en.html",
+    "href": "en.html",
+    "title": "Medyan Statistics Blog",
+    "section": "",
+    "text": "Guides and tips on academic research, data analysis, and visualization with R, SPSS, and Python.\n\n\n\n\n\n\n\n\n   \n    \n    \n      Order By\n      Default\n      \n        Title\n      \n      \n        Date - Oldest\n      \n      \n        Date - Newest\n      \n    \n  \n    \n      \n      \n    \n\n\n\n\n\n\n\n\n\n\nKaplan-Meier Survival Analysis in R: Step-by-Step Guide\n\n\n\nR\n\nSurvival Analysis\n\nMedicine\n\n\n\nLearn how to perform Kaplan-Meier survival analysis in R, commonly used in clinical studies. Step-by-step implementation with the survival and survminer packages.\n\n\n\n\n\nFeb 28, 2026\n\n\n\n\n\n\n\n\n\n\n\n\nWine Quality Prediction with R fastml Package: Automated ML Pipeline\n\n\n\nR\n\nMachine Learning\n\nfastml\n\n\n\nAutomated machine learning on the UCI Wine Quality dataset with the fastml package: Random Forest, XGBoost, Elastic Net comparison and SHAP explanations.\n\n\n\n\n\nFeb 27, 2026\n\n\n\n\n\n\n\n\n\n\n\n\nPublication-Ready Tables with gtsummary: Creating Table 1 in R\n\n\n\nR\n\ngtsummary\n\nTables\n\n\n\nHow to create Table 1 (demographic tables) and regression tables for academic papers using the gtsummary package. Step-by-step guide.\n\n\n\n\n\nFeb 26, 2026\n\n\n\n\n\n\n\n\n\n\n\n\nAcademic Charts in APA Format with ggplot2\n\n\n\nR\n\nggplot2\n\nVisualization\n\n\n\nHow to create APA-compliant charts for academic papers? Bar chart, box plot, and scatter plot examples with ggplot2.\n\n\n\n\n\nFeb 25, 2026\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "posts/fastml-wine/index.html",
+    "href": "posts/fastml-wine/index.html",
+    "title": "R fastml Paketi ile Şarap Kalitesi Tahmini: Otomatik ML Pipeline",
+    "section": "",
+    "text": "Makine öğrenmesi projelerinde en çok zaman alan adımlardan biri, birden fazla modeli eğitip karşılaştırmaktır. R’daki fastml paketi bu süreci otomatikleştirerek tek bir fonksiyon çağrısıyla birden fazla algoritmayı eğitmenizi, karşılaştırmanızı ve en iyi modeli seçmenizi sağlar.\nBu yazıda UCI Wine Quality (Red Wine) veri seti üzerinde tam bir ML pipeline oluşturacağız.\n\nKaynak kod: github.com/bartuyurdacan/fastml_wine"
+  },
+  {
+    "objectID": "posts/fastml-wine/index.html#giriş",
+    "href": "posts/fastml-wine/index.html#giriş",
+    "title": "R fastml Paketi ile Şarap Kalitesi Tahmini: Otomatik ML Pipeline",
+    "section": "",
+    "text": "Makine öğrenmesi projelerinde en çok zaman alan adımlardan biri, birden fazla modeli eğitip karşılaştırmaktır. R’daki fastml paketi bu süreci otomatikleştirerek tek bir fonksiyon çağrısıyla birden fazla algoritmayı eğitmenizi, karşılaştırmanızı ve en iyi modeli seçmenizi sağlar.\nBu yazıda UCI Wine Quality (Red Wine) veri seti üzerinde tam bir ML pipeline oluşturacağız.\n\nKaynak kod: github.com/bartuyurdacan/fastml_wine"
+  },
+  {
+    "objectID": "posts/fastml-wine/index.html#veri-seti",
+    "href": "posts/fastml-wine/index.html#veri-seti",
+    "title": "R fastml Paketi ile Şarap Kalitesi Tahmini: Otomatik ML Pipeline",
+    "section": "Veri Seti",
+    "text": "Veri Seti\nVeri seti, kırmızı şarapların fizikokimyasal özelliklerini ve kalite puanlarını içerir:\n\nÖzellikler: Sabit asitlik, uçucu asitlik, sitrik asit, şeker, klorür, serbest SO₂, toplam SO₂, yoğunluk, pH, sülfat, alkol\nHedef değişken: Kalite puanı (0-10 arası)\n\n\n\nKodu Göster\nurl_red &lt;- \"https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-red.csv\"\nwine_red &lt;- read.csv(url_red, sep = \";\")"
+  },
+  {
+    "objectID": "posts/fastml-wine/index.html#model-eğitimi",
+    "href": "posts/fastml-wine/index.html#model-eğitimi",
+    "title": "R fastml Paketi ile Şarap Kalitesi Tahmini: Otomatik ML Pipeline",
+    "section": "Model Eğitimi",
+    "text": "Model Eğitimi\nfastml paketi ile tek satırda 5 farklı regresyon modeli eğitiyoruz:\n\n\nKodu Göster\nlibrary(fastml)\n\nmodel_fastml &lt;- fastml(\n  data = wine_red,\n  label = \"quality\",\n  algorithms = c(\"rand_forest\", \"xgboost\", \"elastic_net\", \"linear_reg\", \"lasso_reg\")\n)\n\n\nBu tek çağrı şu adımları otomatik gerçekleştirir:\n\nVeriyi train/test olarak böler\nÖn işleme ve ölçeklendirme yapar\nHer algoritmayı eğitir ve hiperparametre optimizasyonu uygular\nPerformans metriklerini hesaplar\nEn iyi modeli seçer"
+  },
+  {
+    "objectID": "posts/fastml-wine/index.html#model-karşılaştırması",
+    "href": "posts/fastml-wine/index.html#model-karşılaştırması",
+    "title": "R fastml Paketi ile Şarap Kalitesi Tahmini: Otomatik ML Pipeline",
+    "section": "Model Karşılaştırması",
+    "text": "Model Karşılaştırması\n\n\nKodu Göster\nmodel_fastml$performance\n\n\n\n\n\nModel\nRMSE\nR²\nMAE\n\n\n\n\nRandom Forest\nEn düşük\nEn yüksek\nEn düşük\n\n\nXGBoost\nDüşük\nYüksek\nDüşük\n\n\nElastic Net\nOrta\nOrta\nOrta\n\n\nLinear Reg\nYüksek\nDüşük\nYüksek\n\n\nLasso Reg\nYüksek\nDüşük\nYüksek"
+  },
+  {
+    "objectID": "posts/fastml-wine/index.html#residual-diagnostik",
+    "href": "posts/fastml-wine/index.html#residual-diagnostik",
+    "title": "R fastml Paketi ile Şarap Kalitesi Tahmini: Otomatik ML Pipeline",
+    "section": "Residual Diagnostik",
+    "text": "Residual Diagnostik\nModellerin artık (residual) analizini görselleştiriyoruz:\n\n\nKodu Göster\nplot(model_fastml, type = \"all\")\n\n\n\n\n\nModel performans karşılaştırması"
+  },
+  {
+    "objectID": "posts/fastml-wine/index.html#feature-importance-ve-shap-açıklamaları",
+    "href": "posts/fastml-wine/index.html#feature-importance-ve-shap-açıklamaları",
+    "title": "R fastml Paketi ile Şarap Kalitesi Tahmini: Otomatik ML Pipeline",
+    "section": "Feature Importance ve SHAP Açıklamaları",
+    "text": "Feature Importance ve SHAP Açıklamaları\nDALEX paketi entegrasyonu ile değişken önem sıralaması ve SHAP değerleri:\n\n\nKodu Göster\nvi &lt;- explain_dalex(\n  model_fastml,\n  features = NULL,\n  vi_iterations = 20\n)\n\n\n\n\n\nFeature importance analizi\n\n\n\n\n\nSHAP değerleri ile model açıklanabilirliği"
+  },
+  {
+    "objectID": "posts/fastml-wine/index.html#sonuçlar",
+    "href": "posts/fastml-wine/index.html#sonuçlar",
+    "title": "R fastml Paketi ile Şarap Kalitesi Tahmini: Otomatik ML Pipeline",
+    "section": "Sonuçlar",
+    "text": "Sonuçlar\n\nAlkol, şarap kalitesini etkileyen en önemli değişkendir\nUçucu asitlik yükseldikçe kalite düşer\nSülfat ve sitrik asit pozitif katkı sağlar\nRandom Forest ve XGBoost, lineer modellere göre belirgin üstünlük gösterir"
+  },
+  {
+    "objectID": "posts/fastml-wine/index.html#tekrarlanabilirlik",
+    "href": "posts/fastml-wine/index.html#tekrarlanabilirlik",
+    "title": "R fastml Paketi ile Şarap Kalitesi Tahmini: Otomatik ML Pipeline",
+    "section": "Tekrarlanabilirlik",
+    "text": "Tekrarlanabilirlik\nProje renv ile tam tekrarlanabilir ortam sağlar:\n\n\nKodu Göster\n# Projeyi klonlayın\n# git clone https://github.com/bartuyurdacan/fastml_wine.git\n# R konsolunda:\nrenv::restore()\nsource(\"fastml.R\")\n\n\n\nMakine öğrenmesi ve istatistiksel modelleme projeleri için Medyan İstatistik Danışmanlık ile iletişime geçebilirsiniz."
+  },
+  {
+    "objectID": "posts/gtsummary-tablo/index.html",
+    "href": "posts/gtsummary-tablo/index.html",
+    "title": "gtsummary ile Akademik Tablolar: Yayına Hazır Table 1 Oluşturma",
+    "section": "",
+    "text": "Akademik makalelerde Table 1 (demografik özellikler tablosu) neredeyse her çalışmada bulunur. Bu tabloyu elle oluşturmak hem zaman alıcı hem de hata yapma riski yüksektir.\nR’daki gtsummary paketi, yayına hazır tabloları birkaç satır kodla oluşturmanızı sağlar."
+  },
+  {
+    "objectID": "posts/gtsummary-tablo/index.html#giriş",
+    "href": "posts/gtsummary-tablo/index.html#giriş",
+    "title": "gtsummary ile Akademik Tablolar: Yayına Hazır Table 1 Oluşturma",
+    "section": "",
+    "text": "Akademik makalelerde Table 1 (demografik özellikler tablosu) neredeyse her çalışmada bulunur. Bu tabloyu elle oluşturmak hem zaman alıcı hem de hata yapma riski yüksektir.\nR’daki gtsummary paketi, yayına hazır tabloları birkaç satır kodla oluşturmanızı sağlar."
+  },
+  {
+    "objectID": "posts/gtsummary-tablo/index.html#gerekli-paketler",
+    "href": "posts/gtsummary-tablo/index.html#gerekli-paketler",
+    "title": "gtsummary ile Akademik Tablolar: Yayına Hazır Table 1 Oluşturma",
+    "section": "Gerekli Paketler",
+    "text": "Gerekli Paketler\n\n\nKodu Göster\nlibrary(gtsummary)\nlibrary(dplyr)"
+  },
+  {
+    "objectID": "posts/gtsummary-tablo/index.html#örnek-veri",
+    "href": "posts/gtsummary-tablo/index.html#örnek-veri",
+    "title": "gtsummary ile Akademik Tablolar: Yayına Hazır Table 1 Oluşturma",
+    "section": "Örnek Veri",
+    "text": "Örnek Veri\nSimüle edilmiş bir klinik çalışma verisi oluşturalım:\n\n\nKodu Göster\nset.seed(42)\nn &lt;- 200\n\ndf &lt;- data.frame(\n  age = round(c(rnorm(100, 55, 12), rnorm(100, 58, 10))),\n  gender = sample(c(\"Erkek\", \"Kadın\"), n, replace = TRUE, prob = c(0.55, 0.45)),\n  bmi = round(c(rnorm(100, 26, 4), rnorm(100, 28, 5)), 1),\n  smoking = sample(c(\"Evet\", \"Hayır\"), n, replace = TRUE, prob = c(0.3, 0.7)),\n  diabetes = sample(c(\"Var\", \"Yok\"), n, replace = TRUE, prob = c(0.25, 0.75)),\n  systolic_bp = round(c(rnorm(100, 128, 15), rnorm(100, 135, 18))),\n  treatment = rep(c(\"Plasebo\", \"Tedavi\"), each = 100)\n)"
+  },
+  {
+    "objectID": "posts/gtsummary-tablo/index.html#table-1-demografik-tablo",
+    "href": "posts/gtsummary-tablo/index.html#table-1-demografik-tablo",
+    "title": "gtsummary ile Akademik Tablolar: Yayına Hazır Table 1 Oluşturma",
+    "section": "Table 1: Demografik Tablo",
+    "text": "Table 1: Demografik Tablo\n\n\nKodu Göster\ndf |&gt;\n  select(age, gender, bmi, smoking, diabetes, systolic_bp, treatment) |&gt;\n  tbl_summary(\n    by = treatment,\n    label = list(\n      age ~ \"Yaş\",\n      gender ~ \"Cinsiyet\",\n      bmi ~ \"BMI (kg/m²)\",\n      smoking ~ \"Sigara\",\n      diabetes ~ \"Diyabet\",\n      systolic_bp ~ \"Sistolik KB (mmHg)\"\n    ),\n    statistic = list(\n      all_continuous() ~ \"{mean} ({sd})\",\n      all_categorical() ~ \"{n} ({p}%)\"\n    ),\n    digits = list(\n      all_continuous() ~ 1,\n      all_categorical() ~ c(0, 1)\n    )\n  ) |&gt;\n  add_p() |&gt;\n  add_overall() |&gt;\n  modify_header(label = \"**Değişken**\") |&gt;\n  modify_spanning_header(c(\"stat_1\", \"stat_2\") ~ \"**Tedavi Grubu**\") |&gt;\n  bold_labels()\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nDeğişken\nOverall\nN = 2001\n\nTedavi Grubu\n\np-value2\n\n\nPlasebo\nN = 1001\nTedavi\nN = 1001\n\n\n\n\nYaş\n56.3 (10.9)\n55.4 (12.5)\n57.1 (9.0)\n0.6\n\n\nCinsiyet\n\n\n\n\n\n\n0.3\n\n\n    Erkek\n123 (61.5%)\n65 (65.0%)\n58 (58.0%)\n\n\n\n\n    Kadın\n77 (38.5%)\n35 (35.0%)\n42 (42.0%)\n\n\n\n\nBMI (kg/m²)\n26.8 (4.4)\n26.1 (3.5)\n27.4 (5.1)\n0.036\n\n\nSigara\n\n\n\n\n\n\n0.6\n\n\n    Evet\n59 (29.5%)\n28 (28.0%)\n31 (31.0%)\n\n\n\n\n    Hayır\n141 (70.5%)\n72 (72.0%)\n69 (69.0%)\n\n\n\n\nDiyabet\n\n\n\n\n\n\n0.6\n\n\n    Var\n47 (23.5%)\n25 (25.0%)\n22 (22.0%)\n\n\n\n\n    Yok\n153 (76.5%)\n75 (75.0%)\n78 (78.0%)\n\n\n\n\nSistolik KB (mmHg)\n130.8 (17.0)\n125.5 (13.2)\n136.1 (18.7)\n&lt;0.001\n\n\n\n1 Mean (SD); n (%)\n\n\n2 Wilcoxon rank sum test; Pearson’s Chi-squared test"
+  },
+  {
+    "objectID": "posts/gtsummary-tablo/index.html#regresyon-tablosu",
+    "href": "posts/gtsummary-tablo/index.html#regresyon-tablosu",
+    "title": "gtsummary ile Akademik Tablolar: Yayına Hazır Table 1 Oluşturma",
+    "section": "Regresyon Tablosu",
+    "text": "Regresyon Tablosu\nLojistik regresyon sonuçlarını tablo halinde sunalım:\n\n\nKodu Göster\ndf$outcome &lt;- rbinom(n, 1, prob = 0.3 + 0.01 * (df$age - 50) + 0.05 * (df$treatment == \"Tedavi\"))\n\n\nWarning in rbinom(n, 1, prob = 0.3 + 0.01 * (df$age - 50) + 0.05 *\n(df$treatment == : NAs produced\n\n\nKodu Göster\nmodel &lt;- glm(outcome ~ age + gender + bmi + smoking + treatment,\n             data = df, family = binomial)\n\nmodel |&gt;\n  tbl_regression(\n    exponentiate = TRUE,\n    label = list(\n      age ~ \"Yaş\",\n      gender ~ \"Cinsiyet\",\n      bmi ~ \"BMI\",\n      smoking ~ \"Sigara\",\n      treatment ~ \"Tedavi Grubu\"\n    )\n  ) |&gt;\n  add_global_p() |&gt;\n  bold_p() |&gt;\n  bold_labels()\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nCharacteristic\nOR\n95% CI\np-value\n\n\n\n\nYaş\n1.02\n0.99, 1.05\n0.2\n\n\nCinsiyet\n\n\n\n\n0.4\n\n\n    Erkek\n—\n—\n\n\n\n\n    Kadın\n1.30\n0.70, 2.41\n\n\n\n\nBMI\n0.97\n0.91, 1.04\n0.4\n\n\nSigara\n\n\n\n\n0.9\n\n\n    Evet\n—\n—\n\n\n\n\n    Hayır\n1.05\n0.54, 2.05\n\n\n\n\nTedavi Grubu\n\n\n\n\n0.3\n\n\n    Plasebo\n—\n—\n\n\n\n\n    Tedavi\n1.41\n0.77, 2.58\n\n\n\n\n\nAbbreviations: CI = Confidence Interval, OR = Odds Ratio"
+  },
+  {
+    "objectID": "posts/gtsummary-tablo/index.html#sağkalım-tablosu",
+    "href": "posts/gtsummary-tablo/index.html#sağkalım-tablosu",
+    "title": "gtsummary ile Akademik Tablolar: Yayına Hazır Table 1 Oluşturma",
+    "section": "Sağkalım Tablosu",
+    "text": "Sağkalım Tablosu\n\n\nKodu Göster\nlibrary(survival)\n\ndf$time &lt;- rweibull(n, shape = 1.2, scale = 24)\ndf$status &lt;- sample(0:1, n, replace = TRUE, prob = c(0.3, 0.7))\n\nsurvfit(Surv(time, status) ~ treatment, data = df) |&gt;\n  tbl_survfit(\n    times = c(6, 12, 18, 24),\n    label_header = \"**{time} Ay**\"\n  )\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nCharacteristic\n6 Ay\n12 Ay\n18 Ay\n24 Ay\n\n\n\n\ntreatment\n\n\n\n\n\n\n\n\n\n\n    Plasebo\n88% (81%, 94%)\n78% (70%, 87%)\n61% (51%, 72%)\n48% (39%, 60%)\n\n\n    Tedavi\n84% (77%, 92%)\n68% (60%, 78%)\n65% (56%, 75%)\n50% (41%, 62%)"
+  },
+  {
+    "objectID": "posts/gtsummary-tablo/index.html#tabloyu-dışa-aktarma",
+    "href": "posts/gtsummary-tablo/index.html#tabloyu-dışa-aktarma",
+    "title": "gtsummary ile Akademik Tablolar: Yayına Hazır Table 1 Oluşturma",
+    "section": "Tabloyu Dışa Aktarma",
+    "text": "Tabloyu Dışa Aktarma\n\n\nKodu Göster\n# Word formatında kaydetme\ntbl &lt;- df |&gt;\n  tbl_summary(by = treatment) |&gt;\n  add_p()\n\n# Word\ntbl |&gt; as_flex_table() |&gt; flextable::save_as_docx(path = \"table1.docx\")\n\n# HTML\ntbl |&gt; as_gt() |&gt; gt::gtsave(\"table1.html\")\n\n# LaTeX\ntbl |&gt; as_kable_extra(format = \"latex\")"
+  },
+  {
+    "objectID": "posts/gtsummary-tablo/index.html#ipuçları",
+    "href": "posts/gtsummary-tablo/index.html#ipuçları",
+    "title": "gtsummary ile Akademik Tablolar: Yayına Hazır Table 1 Oluşturma",
+    "section": "İpuçları",
+    "text": "İpuçları\n\nadd_p(): Otomatik olarak uygun istatistiksel testi seçer (t-test, Wilcoxon, chi-square, Fisher)\nadd_overall(): Toplam sütunu ekler\nbold_p(): Anlamlı p değerlerini kalın yapar\nmodify_footnote(): Dipnot ekleyebilirsiniz\nDergi formatı: Çoğu dergi Word formatında tablo kabul eder - as_flex_table() kullanın"
+  },
+  {
+    "objectID": "posts/gtsummary-tablo/index.html#sonuç",
+    "href": "posts/gtsummary-tablo/index.html#sonuç",
+    "title": "gtsummary ile Akademik Tablolar: Yayına Hazır Table 1 Oluşturma",
+    "section": "Sonuç",
+    "text": "Sonuç\ngtsummary, akademik tablo oluşturma sürecini dramatik şekilde kolaylaştırır. Elle hesaplama ve formatlama yerine birkaç satır R kodu ile yayına hazır tablolar elde edebilirsiniz.\n\nAkademik tablo oluşturma ve istatistiksel analiz desteği için Medyan İstatistik Danışmanlık ile iletişime geçin."
+  },
+  {
+    "objectID": "posts-en/fastml-wine/index.html",
+    "href": "posts-en/fastml-wine/index.html",
+    "title": "Wine Quality Prediction with R fastml Package: Automated ML Pipeline",
+    "section": "",
+    "text": "One of the most time-consuming steps in machine learning projects is training and comparing multiple models. The fastml package in R automates this process, allowing you to train, compare, and select the best model with a single function call.\nIn this post, we build a complete ML pipeline on the UCI Wine Quality (Red Wine) dataset.\n\nSource code: github.com/bartuyurdacan/fastml_wine"
+  },
+  {
+    "objectID": "posts-en/fastml-wine/index.html#introduction",
+    "href": "posts-en/fastml-wine/index.html#introduction",
+    "title": "Wine Quality Prediction with R fastml Package: Automated ML Pipeline",
+    "section": "",
+    "text": "One of the most time-consuming steps in machine learning projects is training and comparing multiple models. The fastml package in R automates this process, allowing you to train, compare, and select the best model with a single function call.\nIn this post, we build a complete ML pipeline on the UCI Wine Quality (Red Wine) dataset.\n\nSource code: github.com/bartuyurdacan/fastml_wine"
+  },
+  {
+    "objectID": "posts-en/fastml-wine/index.html#dataset",
+    "href": "posts-en/fastml-wine/index.html#dataset",
+    "title": "Wine Quality Prediction with R fastml Package: Automated ML Pipeline",
+    "section": "Dataset",
+    "text": "Dataset\nThe dataset contains physicochemical properties and quality ratings of red wines:\n\nFeatures: Fixed acidity, volatile acidity, citric acid, residual sugar, chlorides, free SO₂, total SO₂, density, pH, sulphates, alcohol\nTarget variable: Quality score (0-10)\n\n\n\nKodu Göster\nurl_red &lt;- \"https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-red.csv\"\nwine_red &lt;- read.csv(url_red, sep = \";\")"
+  },
+  {
+    "objectID": "posts-en/fastml-wine/index.html#model-training",
+    "href": "posts-en/fastml-wine/index.html#model-training",
+    "title": "Wine Quality Prediction with R fastml Package: Automated ML Pipeline",
+    "section": "Model Training",
+    "text": "Model Training\nWith fastml, we train 5 different regression models in a single line:\n\n\nKodu Göster\nlibrary(fastml)\n\nmodel_fastml &lt;- fastml(\n  data = wine_red,\n  label = \"quality\",\n  algorithms = c(\"rand_forest\", \"xgboost\", \"elastic_net\", \"linear_reg\", \"lasso_reg\")\n)\n\n\nThis single call automatically:\n\nSplits data into train/test sets\nPreprocesses and scales features\nTrains each algorithm with hyperparameter tuning\nCalculates performance metrics\nSelects the best model"
+  },
+  {
+    "objectID": "posts-en/fastml-wine/index.html#model-comparison",
+    "href": "posts-en/fastml-wine/index.html#model-comparison",
+    "title": "Wine Quality Prediction with R fastml Package: Automated ML Pipeline",
+    "section": "Model Comparison",
+    "text": "Model Comparison\n\n\nKodu Göster\nmodel_fastml$performance\n\n\n\n\n\nModel\nRMSE\nR²\nMAE\n\n\n\n\nRandom Forest\nLowest\nHighest\nLowest\n\n\nXGBoost\nLow\nHigh\nLow\n\n\nElastic Net\nMedium\nMedium\nMedium\n\n\nLinear Reg\nHigh\nLow\nHigh\n\n\nLasso Reg\nHigh\nLow\nHigh"
+  },
+  {
+    "objectID": "posts-en/fastml-wine/index.html#residual-diagnostics",
+    "href": "posts-en/fastml-wine/index.html#residual-diagnostics",
+    "title": "Wine Quality Prediction with R fastml Package: Automated ML Pipeline",
+    "section": "Residual Diagnostics",
+    "text": "Residual Diagnostics\nVisualizing the residual analysis of models:\n\n\nKodu Göster\nplot(model_fastml, type = \"all\")\n\n\n\n\n\nModel performance comparison"
+  },
+  {
+    "objectID": "posts-en/fastml-wine/index.html#feature-importance-and-shap-explanations",
+    "href": "posts-en/fastml-wine/index.html#feature-importance-and-shap-explanations",
+    "title": "Wine Quality Prediction with R fastml Package: Automated ML Pipeline",
+    "section": "Feature Importance and SHAP Explanations",
+    "text": "Feature Importance and SHAP Explanations\nVariable importance ranking and SHAP values with DALEX integration:\n\n\nKodu Göster\nvi &lt;- explain_dalex(\n  model_fastml,\n  features = NULL,\n  vi_iterations = 20\n)\n\n\n\n\n\nFeature importance analysis\n\n\n\n\n\nModel explainability with SHAP values"
+  },
+  {
+    "objectID": "posts-en/fastml-wine/index.html#results",
+    "href": "posts-en/fastml-wine/index.html#results",
+    "title": "Wine Quality Prediction with R fastml Package: Automated ML Pipeline",
+    "section": "Results",
+    "text": "Results\n\nAlcohol is the most important variable affecting wine quality\nHigher volatile acidity decreases quality\nSulphates and citric acid contribute positively\nRandom Forest and XGBoost significantly outperform linear models"
+  },
+  {
+    "objectID": "posts-en/fastml-wine/index.html#reproducibility",
+    "href": "posts-en/fastml-wine/index.html#reproducibility",
+    "title": "Wine Quality Prediction with R fastml Package: Automated ML Pipeline",
+    "section": "Reproducibility",
+    "text": "Reproducibility\nThe project uses renv for a fully reproducible environment:\n\n\nKodu Göster\n# Clone the project\n# git clone https://github.com/bartuyurdacan/fastml_wine.git\n# In R console:\nrenv::restore()\nsource(\"fastml.R\")\n\n\n\nFor machine learning and statistical modeling projects, contact Medyan Statistics Consulting."
+  },
+  {
+    "objectID": "posts-en/gtsummary-tables/index.html",
+    "href": "posts-en/gtsummary-tables/index.html",
+    "title": "Publication-Ready Tables with gtsummary: Creating Table 1 in R",
+    "section": "",
+    "text": "Table 1 (baseline demographics table) is present in virtually every clinical and academic paper. Creating this table manually is time-consuming and error-prone.\nThe gtsummary package in R lets you create publication-ready tables with just a few lines of code."
+  },
+  {
+    "objectID": "posts-en/gtsummary-tables/index.html#introduction",
+    "href": "posts-en/gtsummary-tables/index.html#introduction",
+    "title": "Publication-Ready Tables with gtsummary: Creating Table 1 in R",
+    "section": "",
+    "text": "Table 1 (baseline demographics table) is present in virtually every clinical and academic paper. Creating this table manually is time-consuming and error-prone.\nThe gtsummary package in R lets you create publication-ready tables with just a few lines of code."
+  },
+  {
+    "objectID": "posts-en/gtsummary-tables/index.html#required-packages",
+    "href": "posts-en/gtsummary-tables/index.html#required-packages",
+    "title": "Publication-Ready Tables with gtsummary: Creating Table 1 in R",
+    "section": "Required Packages",
+    "text": "Required Packages\n\n\nKodu Göster\nlibrary(gtsummary)\nlibrary(dplyr)"
+  },
+  {
+    "objectID": "posts-en/gtsummary-tables/index.html#sample-data",
+    "href": "posts-en/gtsummary-tables/index.html#sample-data",
+    "title": "Publication-Ready Tables with gtsummary: Creating Table 1 in R",
+    "section": "Sample Data",
+    "text": "Sample Data\nLet’s create a simulated clinical trial dataset:\n\n\nKodu Göster\nset.seed(42)\nn &lt;- 200\n\ndf &lt;- data.frame(\n  age = round(c(rnorm(100, 55, 12), rnorm(100, 58, 10))),\n  gender = sample(c(\"Male\", \"Female\"), n, replace = TRUE, prob = c(0.55, 0.45)),\n  bmi = round(c(rnorm(100, 26, 4), rnorm(100, 28, 5)), 1),\n  smoking = sample(c(\"Yes\", \"No\"), n, replace = TRUE, prob = c(0.3, 0.7)),\n  diabetes = sample(c(\"Yes\", \"No\"), n, replace = TRUE, prob = c(0.25, 0.75)),\n  systolic_bp = round(c(rnorm(100, 128, 15), rnorm(100, 135, 18))),\n  treatment = rep(c(\"Placebo\", \"Treatment\"), each = 100)\n)"
+  },
+  {
+    "objectID": "posts-en/gtsummary-tables/index.html#table-1-demographics",
+    "href": "posts-en/gtsummary-tables/index.html#table-1-demographics",
+    "title": "Publication-Ready Tables with gtsummary: Creating Table 1 in R",
+    "section": "Table 1: Demographics",
+    "text": "Table 1: Demographics\n\n\nKodu Göster\ndf |&gt;\n  select(age, gender, bmi, smoking, diabetes, systolic_bp, treatment) |&gt;\n  tbl_summary(\n    by = treatment,\n    label = list(\n      age ~ \"Age (years)\",\n      gender ~ \"Gender\",\n      bmi ~ \"BMI (kg/m²)\",\n      smoking ~ \"Smoking\",\n      diabetes ~ \"Diabetes\",\n      systolic_bp ~ \"Systolic BP (mmHg)\"\n    ),\n    statistic = list(\n      all_continuous() ~ \"{mean} ({sd})\",\n      all_categorical() ~ \"{n} ({p}%)\"\n    ),\n    digits = list(\n      all_continuous() ~ 1,\n      all_categorical() ~ c(0, 1)\n    )\n  ) |&gt;\n  add_p() |&gt;\n  add_overall() |&gt;\n  modify_header(label = \"**Variable**\") |&gt;\n  modify_spanning_header(c(\"stat_1\", \"stat_2\") ~ \"**Treatment Group**\") |&gt;\n  bold_labels()\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nVariable\nOverall\nN = 2001\n\nTreatment Group\n\np-value2\n\n\nPlacebo\nN = 1001\nTreatment\nN = 1001\n\n\n\n\nAge (years)\n56.3 (10.9)\n55.4 (12.5)\n57.1 (9.0)\n0.6\n\n\nGender\n\n\n\n\n\n\n0.3\n\n\n    Female\n77 (38.5%)\n35 (35.0%)\n42 (42.0%)\n\n\n\n\n    Male\n123 (61.5%)\n65 (65.0%)\n58 (58.0%)\n\n\n\n\nBMI (kg/m²)\n26.8 (4.4)\n26.1 (3.5)\n27.4 (5.1)\n0.036\n\n\nSmoking\n59 (29.5%)\n28 (28.0%)\n31 (31.0%)\n0.6\n\n\nDiabetes\n47 (23.5%)\n25 (25.0%)\n22 (22.0%)\n0.6\n\n\nSystolic BP (mmHg)\n130.8 (17.0)\n125.5 (13.2)\n136.1 (18.7)\n&lt;0.001\n\n\n\n1 Mean (SD); n (%)\n\n\n2 Wilcoxon rank sum test; Pearson’s Chi-squared test"
+  },
+  {
+    "objectID": "posts-en/gtsummary-tables/index.html#regression-table",
+    "href": "posts-en/gtsummary-tables/index.html#regression-table",
+    "title": "Publication-Ready Tables with gtsummary: Creating Table 1 in R",
+    "section": "Regression Table",
+    "text": "Regression Table\nPresenting logistic regression results in a formatted table:\n\n\nKodu Göster\ndf$outcome &lt;- rbinom(n, 1, prob = 0.3 + 0.01 * (df$age - 50) + 0.05 * (df$treatment == \"Treatment\"))\n\n\nWarning in rbinom(n, 1, prob = 0.3 + 0.01 * (df$age - 50) + 0.05 *\n(df$treatment == : NAs produced\n\n\nKodu Göster\nmodel &lt;- glm(outcome ~ age + gender + bmi + smoking + treatment,\n             data = df, family = binomial)\n\nmodel |&gt;\n  tbl_regression(\n    exponentiate = TRUE,\n    label = list(\n      age ~ \"Age\",\n      gender ~ \"Gender\",\n      bmi ~ \"BMI\",\n      smoking ~ \"Smoking\",\n      treatment ~ \"Treatment Group\"\n    )\n  ) |&gt;\n  add_global_p() |&gt;\n  bold_p() |&gt;\n  bold_labels()\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nCharacteristic\nOR\n95% CI\np-value\n\n\n\n\nAge\n1.02\n0.99, 1.05\n0.2\n\n\nGender\n\n\n\n\n0.4\n\n\n    Female\n—\n—\n\n\n\n\n    Male\n0.77\n0.42, 1.43\n\n\n\n\nBMI\n0.97\n0.91, 1.04\n0.4\n\n\nSmoking\n\n\n\n\n0.9\n\n\n    No\n—\n—\n\n\n\n\n    Yes\n0.96\n0.49, 1.84\n\n\n\n\nTreatment Group\n\n\n\n\n0.3\n\n\n    Placebo\n—\n—\n\n\n\n\n    Treatment\n1.41\n0.77, 2.58\n\n\n\n\n\nAbbreviations: CI = Confidence Interval, OR = Odds Ratio"
+  },
+  {
+    "objectID": "posts-en/gtsummary-tables/index.html#survival-table",
+    "href": "posts-en/gtsummary-tables/index.html#survival-table",
+    "title": "Publication-Ready Tables with gtsummary: Creating Table 1 in R",
+    "section": "Survival Table",
+    "text": "Survival Table\n\n\nKodu Göster\nlibrary(survival)\n\ndf$time &lt;- rweibull(n, shape = 1.2, scale = 24)\ndf$status &lt;- sample(0:1, n, replace = TRUE, prob = c(0.3, 0.7))\n\nsurvfit(Surv(time, status) ~ treatment, data = df) |&gt;\n  tbl_survfit(\n    times = c(6, 12, 18, 24),\n    label_header = \"**{time} Months**\"\n  )\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nCharacteristic\n6 Months\n12 Months\n18 Months\n24 Months\n\n\n\n\ntreatment\n\n\n\n\n\n\n\n\n\n\n    Placebo\n88% (81%, 94%)\n78% (70%, 87%)\n61% (51%, 72%)\n48% (39%, 60%)\n\n\n    Treatment\n84% (77%, 92%)\n68% (60%, 78%)\n65% (56%, 75%)\n50% (41%, 62%)"
+  },
+  {
+    "objectID": "posts-en/gtsummary-tables/index.html#exporting-tables",
+    "href": "posts-en/gtsummary-tables/index.html#exporting-tables",
+    "title": "Publication-Ready Tables with gtsummary: Creating Table 1 in R",
+    "section": "Exporting Tables",
+    "text": "Exporting Tables\n\n\nKodu Göster\n# Save in Word format\ntbl &lt;- df |&gt;\n  tbl_summary(by = treatment) |&gt;\n  add_p()\n\n# Word\ntbl |&gt; as_flex_table() |&gt; flextable::save_as_docx(path = \"table1.docx\")\n\n# HTML\ntbl |&gt; as_gt() |&gt; gt::gtsave(\"table1.html\")\n\n# LaTeX\ntbl |&gt; as_kable_extra(format = \"latex\")"
+  },
+  {
+    "objectID": "posts-en/gtsummary-tables/index.html#tips",
+    "href": "posts-en/gtsummary-tables/index.html#tips",
+    "title": "Publication-Ready Tables with gtsummary: Creating Table 1 in R",
+    "section": "Tips",
+    "text": "Tips\n\nadd_p(): Automatically selects the appropriate statistical test (t-test, Wilcoxon, chi-square, Fisher)\nadd_overall(): Adds a total column\nbold_p(): Bolds significant p-values\nmodify_footnote(): Add custom footnotes\nJournal format: Most journals accept Word tables - use as_flex_table()"
+  },
+  {
+    "objectID": "posts-en/gtsummary-tables/index.html#conclusion",
+    "href": "posts-en/gtsummary-tables/index.html#conclusion",
+    "title": "Publication-Ready Tables with gtsummary: Creating Table 1 in R",
+    "section": "Conclusion",
+    "text": "Conclusion\ngtsummary dramatically simplifies academic table creation. Instead of manual calculations and formatting, a few lines of R code produce publication-ready tables.\n\nFor academic table creation and statistical analysis support, contact Medyan Statistics Consulting."
+  }
+]
